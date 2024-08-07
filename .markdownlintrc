@@ -1,0 +1,15 @@
+{
+    "default": true,
+    "rules": {
+        "line-length": {
+            "line_length": 80
+        },
+        "no-alt-text": false,
+        "no-hard-tabs": true,
+        "no-inline-html": false,
+        "no-multiple-blanks": {
+            "maximum": 1
+        },
+        "no-trailing-spaces": false
+    }
+}
