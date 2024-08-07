@@ -1,0 +1,15 @@
+{
+    "caseSensitive": true,
+    "dictionaries": [
+        "bash",
+        "companies",
+        "en_US",
+        "filetypes",
+        "go",
+        "golang",
+        "npm",
+        "softwareTerms",
+        "typescript"
+    ],
+    "words": ["bunx", "Intelli", "lazynx"]
+}
