@@ -1,0 +1,22 @@
+{
+    "caseSensitive": false,
+    "dictionaries": [
+        "bash",
+        "companies",
+        "en_US",
+        "filetypes",
+        "go",
+        "golang",
+        "npm",
+        "softwareTerms",
+        "typescript"
+    ],
+    "words": [
+        "Automations",
+        "bunx",
+        "cheatsheet",
+        "cheatsheets",
+        "Intelli",
+        "lazynx"
+    ]
+}

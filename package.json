@@ -1,14 +1,38 @@
 {
-  "name": "@lazynx/source",
-  "version": "0.0.0",
-  "license": "MIT",
-  "scripts": {},
-  "private": true,
-  "dependencies": {
-    "@nx-go/nx-go": "3.2.0"
-  },
-  "devDependencies": {
-    "@nx/workspace": "19.6.2",
-    "nx": "19.6.2"
-  }
+    "name": "@lazynx/source",
+    "version": "0.0.0",
+    "license": "MIT",
+    "scripts": {
+        "affected": "nx affected",
+        "affected:format": "nx affected:write",
+        "affected:graph": "nx affected --graph",
+        "affected:lint": "nx affected:lint --fix",
+        "affected:test": "nx affected:test",
+        "build": "nx run lazynx:build",
+        "commit": "commitizen-cli",
+        "format": "nx run-many --target=write --all=true",
+        "graph": "nx graph",
+        "lint": "nx lint --fix",
+        "list": "nx list",
+        "nx": "nx",
+        "serve": "nx run lazynx:serve",
+        "test": "nx test",
+        "test:watch": "nx test --watch",
+        "tidy": "nx tidy",
+        "prepare": "husky"
+    },
+    "private": true,
+    "dependencies": {
+        "@nx-go/nx-go": "3.2.0"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^19.4.1",
+        "@commitlint/config-conventional": "^19.4.1",
+        "@nx/workspace": "19.6.2",
+        "commitizen": "^4.3.0",
+        "commitizen-cli": "^3.1.2",
+        "cspell": "^8.14.2",
+        "husky": "^9.1.5",
+        "nx": "19.6.2"
+    }
 }

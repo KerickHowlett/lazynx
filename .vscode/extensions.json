@@ -1,7 +1,11 @@
 {
-  "recommendations": [
-    
-    "nrwl.angular-console",
-    "esbenp.prettier-vscode"
-  ]
+    "recommendations": [
+        "DavidAnson.vscode-markdownlint",
+        "EditorConfig.EditorConfig",
+        "dbaeumer.vscode-eslint",
+        "golang.go",
+        "nrwl.angular-console",
+        "oven.bun-vscode",
+        "streetsidesoftware.code-spell-checker"
+    ]
 }
