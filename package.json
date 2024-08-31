@@ -9,7 +9,7 @@
         "affected:lint": "nx affected:lint --fix",
         "affected:test": "nx affected:test",
         "build": "nx run lazynx:build",
-        "commit": "commitizen-cli",
+        "commit": "git-cz",
         "format": "nx run-many --target=write --all=true",
         "graph": "nx graph",
         "lint": "nx lint --fix",
@@ -21,6 +21,11 @@
         "tidy": "nx tidy",
         "prepare": "husky"
     },
+    "config": {
+        "commitizen": {
+            "path": "@commitlint/cz-commitlint"
+        }
+    },
     "private": true,
     "dependencies": {
         "@nx-go/nx-go": "3.2.0"
@@ -28,11 +33,12 @@
     "devDependencies": {
         "@commitlint/cli": "^19.4.1",
         "@commitlint/config-conventional": "^19.4.1",
+        "@commitlint/cz-commitlint": "^19.4.0",
         "@nx/workspace": "19.6.2",
         "commitizen": "^4.3.0",
-        "commitizen-cli": "^3.1.2",
         "cspell": "^8.14.2",
         "husky": "^9.1.5",
+        "inquirer": "9",
         "nx": "19.6.2"
     }
 }
