@@ -1,3 +1,6 @@
 go 1.23
 
-use ./cmd/lazynx
+use (
+	./cmd/lazynx
+	./packages/app
+)
