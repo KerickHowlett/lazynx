@@ -4,8 +4,6 @@ import (
 	"github.com/jesseduffield/gocui"
 )
 
-var OverlappingEdges = false
-
 type GUI struct {
 	g *gocui.Gui
 }
@@ -24,7 +22,7 @@ func (gui *GUI) Run() error {
 func (gui *GUI) initGoCUI() (g *gocui.Gui, err error) {
 	g, err = gocui.NewGui(gocui.NewGuiOpts{
 		OutputMode:      gocui.OutputTrue,
-		SupportOverlaps: OverlappingEdges,
+		SupportOverlaps: false,
 		PlayRecording:   false,
 		Headless:        false,
 		Width:           0,
