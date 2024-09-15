@@ -28,11 +28,20 @@ func (gui *GUI) RunAndHandleError() error {
 	return utils.SafeWithError(func() error {
 		if err := gui.Run(); err != nil {
 			close(gui.stopChan)
-			return err
+			return gui.determineRunError(err)
 		}
 
 		return nil
 	})
+}
+
+func (gui *GUI) determineRunError(err error) error {
+	switch err {
+	case gocui.ErrQuit:
+		return nil
+	default:
+		return err
+	}
 }
 
 func (gui *GUI) initGoCUI() (g *gocui.Gui, err error) {
