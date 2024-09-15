@@ -5,7 +5,8 @@ import (
 )
 
 type GUI struct {
-	g *gocui.Gui
+	g        *gocui.Gui
+	stopChan chan struct{}
 }
 
 func (gui *GUI) Run() error {
@@ -15,6 +16,12 @@ func (gui *GUI) Run() error {
 	}
 
 	gui.g = g
+
+	return nil
+}
+
+func (gui *GUI) RunAndHandleError() error {
+	gui.stopChan = make(chan struct{})
 
 	return nil
 }
