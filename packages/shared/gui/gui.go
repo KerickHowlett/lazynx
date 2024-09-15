@@ -18,8 +18,10 @@ func (gui *GUI) Run() error {
 	}
 
 	gui.g = g
-	gui.g.Mouse = true
 	defer gui.g.Close()
+
+	// TODO: Toggle setting with customizable config file.
+	gui.g.Mouse = true
 
 	return gui.g.MainLoop()
 }
