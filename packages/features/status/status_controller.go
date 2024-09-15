@@ -4,7 +4,9 @@ import (
 	"packages/shared/gui/controller"
 )
 
-type StatusController struct{}
+type StatusController struct {
+	controller.BaseController
+}
 
 var _ controller.IController = &StatusController{}
 
