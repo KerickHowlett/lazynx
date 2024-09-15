@@ -5,5 +5,6 @@ use (
 	./packages/app
 	./packages/features/status
 	./packages/shared/gui
+	./packages/shared/types
 	./packages/shared/utils
 )
