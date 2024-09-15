@@ -1,4 +1,4 @@
-module packages/gui
+module packages/shared/gui
 
 go 1.23
 
