@@ -18,6 +18,7 @@ func (gui *GUI) Run() error {
 	}
 
 	gui.g = g
+	defer gui.g.Close()
 
 	return nil
 }
