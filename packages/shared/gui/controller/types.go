@@ -1,3 +1,3 @@
-package types
+package controller
 
 type IController interface{}

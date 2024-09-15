@@ -1,12 +1,12 @@
 package status
 
 import (
-	"packages/shared/types"
+	"packages/shared/gui/controller"
 )
 
 type StatusController struct{}
 
-var _ types.IController = &StatusController{}
+var _ controller.IController = &StatusController{}
 
 func NewStatusController() *StatusController {
 	return &StatusController{}
