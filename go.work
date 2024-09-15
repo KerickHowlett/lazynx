@@ -4,4 +4,5 @@ use (
 	./cli/lazynx
 	./packages/app
 	./packages/gui
+	./packages/shared/utils
 )

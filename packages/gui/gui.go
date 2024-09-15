@@ -1,6 +1,8 @@
 package gui
 
 import (
+	"packages/shared/utils"
+
 	"github.com/jesseduffield/gocui"
 )
 
@@ -23,7 +25,14 @@ func (gui *GUI) Run() error {
 func (gui *GUI) RunAndHandleError() error {
 	gui.stopChan = make(chan struct{})
 
-	return nil
+	return utils.SafeWithError(func() error {
+		if err := gui.Run(); err != nil {
+			close(gui.stopChan)
+			return err
+		}
+
+		return nil
+	})
 }
 
 func (gui *GUI) initGoCUI() (g *gocui.Gui, err error) {
