@@ -1,8 +1,8 @@
 {
   "name": "gui",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
-  "sourceRoot": "packages/gui",
+  "sourceRoot": "packages/shared/gui",
   "tags": [
     "type:ui"
   ],

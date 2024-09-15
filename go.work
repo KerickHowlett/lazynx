@@ -3,6 +3,6 @@ go 1.23
 use (
 	./cli/lazynx
 	./packages/app
-	./packages/gui
+	./packages/shared/gui
 	./packages/shared/utils
 )
