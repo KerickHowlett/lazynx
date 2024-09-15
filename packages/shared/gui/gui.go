@@ -18,9 +18,10 @@ func (gui *GUI) Run() error {
 	}
 
 	gui.g = g
+	gui.g.Mouse = true
 	defer gui.g.Close()
 
-	return nil
+	return gui.g.MainLoop()
 }
 
 func (gui *GUI) RunAndHandleError() error {
