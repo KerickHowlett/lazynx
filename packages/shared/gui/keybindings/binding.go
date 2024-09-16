@@ -33,7 +33,7 @@ type Binding struct {
 	// instead.
 	DisplayOnScreen bool
 
-	// TODO: Include `DisplayStyle` in `Binding`.
+	// DisplayStyle *style.TextStyle
 
 	// to be displayed if the keybinding is highlighted from within a menu
 	Tooltip string

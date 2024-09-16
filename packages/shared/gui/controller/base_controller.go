@@ -2,7 +2,6 @@ package controller
 
 import (
 	"packages/shared/gui/keybindings"
-	"packages/shared/gui/types"
 
 	"github.com/jesseduffield/gocui"
 )
@@ -29,6 +28,6 @@ func (bc *BaseController) GetOnFocus() func(keybindings.KeybindingsOpts) error {
 	return nil
 }
 
-func (bc *BaseController) GetOnBlur() func(types.OnBlurOpts) error {
+func (bc *BaseController) GetOnBlur() func(keybindings.OnBlurOpts) error {
 	return nil
 }
