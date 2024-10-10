@@ -1,11 +1,13 @@
 package menu
 
+import "packages/shared/gui/formatting"
+
 type CreateMenuOptions struct {
-	Title      string
-	Prompt     string // a message that will be displayed above the menu options
-	Items      []*MenuItem
-	HideCancel bool
-	// ColumnAlignment []utils.Alignment
+	Title           string
+	Prompt          string // a message that will be displayed above the menu options
+	Items           []*MenuItem
+	HideCancel      bool
+	ColumnAlignment []formatting.Alignment
 }
 
 type MenuSection struct {
@@ -22,17 +24,3 @@ const (
 	MenuWidgetCheckboxSelected
 	MenuWidgetCheckboxUnselected
 )
-
-func MakeMenuRadioButton(value bool) MenuWidget {
-	if value {
-		return MenuWidgetRadioButtonSelected
-	}
-	return MenuWidgetRadioButtonUnselected
-}
-
-func MakeMenuCheckBox(value bool) MenuWidget {
-	if value {
-		return MenuWidgetCheckboxSelected
-	}
-	return MenuWidgetCheckboxUnselected
-}
