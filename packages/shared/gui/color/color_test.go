@@ -192,9 +192,9 @@ func TestDecolorise(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		output := Decolorise(test.input)
+		output := Decolorize(test.input)
 		if output != test.output {
-			t.Errorf("Decolorise(%s) = %s, want %s", test.input, output, test.output)
+			t.Errorf("Decolorize(%s) = %s, want %s", test.input, output, test.output)
 		}
 	}
 }

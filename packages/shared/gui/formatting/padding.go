@@ -10,7 +10,7 @@ import (
 
 // WithPadding pads a string as much as you want
 func WithPadding(str string, padding int, alignment Alignment) string {
-	uncoloredStr := color.Decolorise(str)
+	uncoloredStr := color.Decolorize(str)
 	width := StringWidth(uncoloredStr)
 	if padding < width {
 		return str
@@ -56,7 +56,7 @@ func getPadWidths(stringArrays [][]string) []int {
 	}
 	return lo.Map(lo.Range(maxWidth-1), func(i int, _ int) int {
 		return MaxFn(stringArrays, func(stringArray []string) int {
-			uncoloredStr := color.Decolorise(stringArray[i])
+			uncoloredStr := color.Decolorize(stringArray[i])
 
 			return StringWidth(uncoloredStr)
 		})
