@@ -1,10 +1,6 @@
-package text
+package style
 
-import (
-	"github.com/gookit/color"
-
-	c "packages/shared/gui/color"
-)
+import "github.com/gookit/color"
 
 // A TextStyle contains a foreground color, background color, and
 // decorations (bold/underline/reverse).
@@ -28,8 +24,8 @@ import (
 // `style` field.
 
 type TextStyle struct {
-	fg         *c.Color
-	bg         *c.Color
+	fg         *Color
+	bg         *Color
 	decoration Decoration
 
 	// making this public so that we can use a type switch to get to the underlying

@@ -1,4 +1,4 @@
-package text
+package style
 
 import "github.com/gookit/color"
 

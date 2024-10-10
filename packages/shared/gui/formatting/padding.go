@@ -3,14 +3,14 @@ package formatting
 import (
 	"strings"
 
-	"packages/shared/gui/color"
+	"packages/shared/gui/style"
 
 	"github.com/samber/lo"
 )
 
 // WithPadding pads a string as much as you want
 func WithPadding(str string, padding int, alignment Alignment) string {
-	uncoloredStr := color.Decolorize(str)
+	uncoloredStr := style.Decolorize(str)
 	width := StringWidth(uncoloredStr)
 	if padding < width {
 		return str
@@ -56,7 +56,7 @@ func getPadWidths(stringArrays [][]string) []int {
 	}
 	return lo.Map(lo.Range(maxWidth-1), func(i int, _ int) int {
 		return MaxFn(stringArrays, func(stringArray []string) int {
-			uncoloredStr := color.Decolorize(stringArray[i])
+			uncoloredStr := style.Decolorize(stringArray[i])
 
 			return StringWidth(uncoloredStr)
 		})

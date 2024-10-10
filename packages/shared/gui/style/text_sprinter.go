@@ -1,4 +1,4 @@
-package text
+package style
 
 type Sprinter interface {
 	Sprint(a ...interface{}) string

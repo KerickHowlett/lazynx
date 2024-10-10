@@ -1,10 +1,10 @@
-package color
+package style
 
 import (
 	"testing"
 )
 
-func TestDecolorise(t *testing.T) {
+func TestDecolorize(t *testing.T) {
 	tests := []struct {
 		input  string
 		output string

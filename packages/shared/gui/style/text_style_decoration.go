@@ -1,4 +1,4 @@
-package text
+package style
 
 func (b TextStyle) MergeStyle(other TextStyle) TextStyle {
 	b.decoration = b.decoration.Merge(other.decoration)
