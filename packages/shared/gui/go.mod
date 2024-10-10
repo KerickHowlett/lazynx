@@ -4,10 +4,7 @@ go 1.23
 
 require github.com/jesseduffield/gocui v0.3.1-0.20240628061234-aed9e133e65b
 
-require (
-	github.com/stretchr/testify v1.8.4 // indirect
-	github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778 // indirect
-)
+require github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778 // indirect
 
 require (
 	github.com/gdamore/encoding v1.0.0 // indirect

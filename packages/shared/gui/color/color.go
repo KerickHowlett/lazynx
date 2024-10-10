@@ -37,6 +37,14 @@ func Decolorize(str string) string {
 	return ret
 }
 
+func (c Color) GetBasicColor() *color.Color {
+	return c.basic
+}
+
+func (c Color) GetRGBColor() *color.RGBColor {
+	return c.rgb
+}
+
 func IsValidHexValue(v string) bool {
 	if len(v) != 4 && len(v) != 7 {
 		return false
