@@ -1,4 +1,4 @@
-package types
+package keybindings
 
 type DisabledReason struct {
 	Text string

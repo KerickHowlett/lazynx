@@ -1,9 +1,6 @@
 package menu
 
-import (
-	"packages/shared/gui/keybindings"
-	"packages/shared/gui/types"
-)
+import "packages/shared/gui/keybindings"
 
 type MenuItem struct {
 	Label string
@@ -31,7 +28,7 @@ type MenuItem struct {
 
 	// If non-nil, show this in a tooltip, style the menu item as disabled,
 	// and refuse to invoke the command
-	DisabledReason *types.DisabledReason
+	DisabledReason *keybindings.DisabledReason
 
 	// Can be used to group menu items into sections with headers. MenuItems
 	// with the same Section should be contiguous, and will automatically get a

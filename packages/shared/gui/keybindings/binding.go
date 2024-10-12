@@ -1,10 +1,6 @@
 package keybindings
 
-import (
-	"packages/shared/gui/types"
-
-	"github.com/jesseduffield/gocui"
-)
+import "github.com/jesseduffield/gocui"
 
 // Binding - a keybinding mapping a key and modifier to a handler. The keypress
 // is only handled if the given view has focus, or handled globally if the view
@@ -43,7 +39,7 @@ type Binding struct {
 	// disabled and we show the given text in an error message when trying to
 	// invoke it. When left nil, the command is always enabled. Note that this
 	// function must not do expensive calls.
-	GetDisabledReason func() *types.DisabledReason
+	GetDisabledReason func() *DisabledReason
 }
 
 func (b *Binding) IsDisabled() bool {
