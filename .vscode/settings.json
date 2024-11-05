@@ -1,0 +1,45 @@
+{
+    "[json]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "always",
+            "source.fixAll.eslint": "always",
+            "source.fixAll.sortJSON": "always"
+        },
+        "editor.quickSuggestions": {
+            "comments": "on",
+            "other": "on",
+            "strings": true
+        }
+    },
+    "[jsonc]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "always",
+            "source.fixAll.eslint": "always",
+            "source.fixAll.sortJSON": "always"
+        },
+        "editor.quickSuggestions": {
+            "comments": "on",
+            "other": "on",
+            "strings": true
+        },
+        "editor.suggest.insertMode": "replace"
+    },
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "files.eol": "\n",
+    "markdownlint.config": {
+        "line-length": {
+            "headings": true,
+            "line_length": 80,
+            "strict": true
+        },
+        "no-alt-text": false,
+        "no-hard-tabs": true,
+        "no-inline-html": false,
+        "no-multiple-blanks": {
+            "maximum": 1
+        },
+        "no-trailing-spaces": false
+    },
+    "typescript.tsdk": "./node_modules/typescript/lib"
+}

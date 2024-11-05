@@ -1,0 +1,2 @@
+# bun affected:lint --uncommitted --parallel --fix=true
+# bun affected:write --uncommitted

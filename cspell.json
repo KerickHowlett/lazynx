@@ -1,0 +1,16 @@
+{
+    "caseSensitive": false,
+    "dictionaries": [
+        "bash",
+        "companies",
+        "en_US",
+        "filetypes",
+        "rust",
+        "npm",
+        "softwareTerms",
+        "typescript"
+    ],
+    "words": [
+        "lazynx"
+    ]
+}
