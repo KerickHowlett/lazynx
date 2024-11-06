@@ -7,14 +7,16 @@
         "affected:graph": "nx affected --graph",
         "affected:lint": "nx affected:lint --fix",
         "affected:test": "nx affected:test",
+        "build": "nx run lazynx:build",
         "commit": "git-cz",
         "graph": "nx graph",
         "lint": "nx lint --fix",
         "list": "nx list",
         "nx": "nx",
+        "prepare": "husky",
+        "run": "nx run lazynx:run",
         "test": "nx test",
-        "test:watch": "nx test --watch",
-        "prepare": "husky"
+        "test:watch": "nx test --watch"
     },
     "config": {
         "commitizen": {
