@@ -11,6 +11,8 @@
         "typescript"
     ],
     "words": [
-        "lazynx"
+        "crossterm",
+        "lazynx",
+        "ratatui"
     ]
 }
