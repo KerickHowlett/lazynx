@@ -1,31 +1,26 @@
-mod app;
-mod terminal;
-
-use std::io;
+use clap::Parser;
+use cli::CLI;
+use color_eyre::Result;
 
 use crate::app::App;
 
-use anyhow::Result;
-use scopeguard::defer;
+mod action;
+mod app;
+mod cli;
+mod components;
+mod config;
+mod errors;
+mod logging;
+mod tui;
 
-fn main() -> Result<()> {
-    terminal::setup()?;
-    defer! { terminal::shutdown(); }
+#[tokio::main]
+async fn main() -> Result<()> {
+    crate::errors::init()?;
+    crate::logging::init()?;
 
-    let mut terminal = terminal::start(io::stdout())?;
+    let args = CLI::parse();
+    let mut app = App::new(args.tick_rate, args.frame_rate)?;
 
-    let app = App::new()?;
-    loop {
-        if app.requires_redraw.get() {
-            app.requires_redraw.set(false);
-        }
-
-        terminal::draw(&mut terminal, &app)?;
-
-        if app.exit_app.get() {
-            break;
-        }
-    }
-
+    app.run().await?;
     Ok(())
 }

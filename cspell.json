@@ -11,9 +11,13 @@
         "typescript"
     ],
     "words": [
+        "consts",
         "crossterm",
         "lazynx",
+        "libc",
         "ratatui",
-        "scopeguard"
+        "scopeguard",
+        "SIGTSTP",
+        "VERGEN"
     ]
 }
