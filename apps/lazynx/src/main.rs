@@ -1,18 +1,31 @@
-use crossterm::event::{self, Event};
-use ratatui::{text::Text, Frame};
+mod app;
+mod terminal;
 
-fn main() {
-    let mut terminal = ratatui::init();
+use std::io;
+
+use crate::app::App;
+
+use anyhow::Result;
+use scopeguard::defer;
+
+fn main() -> Result<()> {
+    terminal::setup()?;
+    defer! { terminal::shutdown(); }
+
+    let mut terminal = terminal::start(io::stdout())?;
+
+    let app = App::new()?;
     loop {
-        terminal.draw(draw).expect("failed to draw frame");
-        if matches!(event::read().expect("failed to read event"), Event::Key(_)) {
+        if app.requires_redraw.get() {
+            app.requires_redraw.set(false);
+        }
+
+        terminal::draw(&mut terminal, &app)?;
+
+        if app.exit_app.get() {
             break;
         }
     }
-    ratatui::restore();
-}
 
-fn draw(frame: &mut Frame) {
-    let text = Text::raw("Hello, World! This is LazyNX!");
-    frame.render_widget(text, frame.area());
+    Ok(())
 }

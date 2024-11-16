@@ -13,6 +13,7 @@
     "words": [
         "crossterm",
         "lazynx",
-        "ratatui"
+        "ratatui",
+        "scopeguard"
     ]
 }
