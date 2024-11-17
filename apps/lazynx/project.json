@@ -1,63 +1,70 @@
 {
-  "name": "lazynx",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "lazynx",
   "projectType": "application",
   "sourceRoot": "apps/lazynx/src",
+  "tags": [],
   "targets": {
     "build": {
       "cache": true,
+      "configurations": {
+        "production": {
+          "release": true
+        }
+      },
       "executor": "@monodon/rust:build",
-      "outputs": [
-        "{options.target-dir}"
-      ],
       "options": {
         "target-dir": "dist/target/lazynx"
       },
-      "configurations": {
-        "production": {
-          "release": true
-        }
-      }
-    },
-    "test": {
-      "cache": true,
-      "executor": "@monodon/rust:test",
       "outputs": [
         "{options.target-dir}"
-      ],
-      "options": {
-        "target-dir": "dist/target/lazynx"
-      },
-      "configurations": {
-        "production": {
-          "release": true
-        }
-      }
+      ]
     },
     "lint": {
       "cache": true,
       "executor": "@monodon/rust:lint",
-      "outputs": [
-        "{options.target-dir}"
-      ],
-      "options": {
-        "target-dir": "dist/target/lazynx"
-      }
-    },
-    "run": {
-      "executor": "@monodon/rust:run",
-      "outputs": [
-        "{options.target-dir}"
-      ],
       "options": {
         "target-dir": "dist/target/lazynx"
       },
+      "outputs": [
+        "{options.target-dir}"
+      ]
+    },
+    "run": {
       "configurations": {
         "production": {
           "release": true
         }
+      },
+      "executor": "@monodon/rust:run",
+      "options": {
+        "target-dir": "dist/target/lazynx"
+      },
+      "outputs": [
+        "{options.target-dir}"
+      ]
+    },
+    "test": {
+      "cache": true,
+      "configurations": {
+        "production": {
+          "release": true
+        }
+      },
+      "executor": "@monodon/rust:test",
+      "options": {
+        "target-dir": "dist/target/lazynx"
+      },
+      "outputs": [
+        "{options.target-dir}"
+      ]
+    },
+    "watch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cargo watch --clear -s 'cargo run --quiet'",
+        "cwd": "apps/lazynx"
       }
     }
-  },
-  "tags": []
+  }
 }

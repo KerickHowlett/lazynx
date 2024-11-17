@@ -9,6 +9,7 @@ authors = ["Kerick Howlett <8661181+KerickHowlett@users.noreply.github.com>"]
 [dependencies]
 anyhow = "1.0.93"
 better-panic = "0.3.0"
+chrono = "0.4.38"
 clap = { version = "4.5.20", features = [
     "derive",
     "cargo",
@@ -41,3 +42,6 @@ tokio-util = "0.7.12"
 tracing = "0.1.40"
 tracing-error = "0.2.0"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter", "serde"] }
+
+[build-dependencies]
+cargo-watch = "8.5.3"

@@ -5,6 +5,17 @@ use tokio::sync::mpsc::UnboundedSender;
 use super::Component;
 use crate::{action::Action, config::Config};
 
+const LAZYNX_TITLE: &str = r#"
+ _                     _   _
+| |                   | \ | |
+| |     __ _ _____   _|  \| |_  __
+| |    / _` |_  / | | | . ` \ \/ /
+| |___| (_| |/ /| |_| | |\  |>  <
+\_____/\__,_/___|\__, \_| \_/_/\_\
+                  __/ |
+                 |___ /
+"#;
+
 #[derive(Default)]
 pub struct Home {
     command_tx: Option<UnboundedSender<Action>>,
@@ -42,7 +53,30 @@ impl Component for Home {
     }
 
     fn draw(&mut self, frame: &mut Frame, area: Rect) -> Result<()> {
-        frame.render_widget(Paragraph::new("hello world"), area);
+        let block = Block::default()
+            .title_top("Status")
+            .borders(Borders::ALL)
+            .title_alignment(Alignment::Left)
+            .border_type(BorderType::Rounded)
+            .padding(Padding::horizontal(2));
+
+        let chunks = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints(Constraint::from_lengths([10, 5]))
+            .split(block.inner(area));
+        frame.render_widget(block, area);
+
+        let header = Paragraph::new(LAZYNX_TITLE);
+        frame.render_widget(header, chunks[0]);
+
+        let current_year = chrono::Datelike::year(&chrono::Local::now());
+        let copyright = Span::from(format!(
+            "Copyright {} {} Kerick Howlett",
+            String::from('\u{00A9}'),
+            current_year
+        ));
+        frame.render_widget(copyright, chunks[1]);
+
         Ok(())
     }
 }

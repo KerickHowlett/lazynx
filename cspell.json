@@ -11,13 +11,16 @@
         "typescript"
     ],
     "words": [
+        "chrono",
         "consts",
         "crossterm",
+        "Datelike",
         "lazynx",
         "libc",
         "ratatui",
         "scopeguard",
         "SIGTSTP",
-        "VERGEN"
+        "VERGEN",
+        "watchexec"
     ]
 }
