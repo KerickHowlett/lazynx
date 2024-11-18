@@ -47,7 +47,8 @@ impl Home {
     fn get_header(&self) -> Paragraph {
         // NOTE: Don't change the whitespace or alignment for ASCII art text.
         //       Any changes to them will be reflected in the app itself.
-        const LAZYNX_TITLE: &str = r#"
+        let lazynx_title = String::from(
+            r#"
  _                     _   _
 | |                   | \ | |
 | |     __ _ _____   _|  \| |_  __
@@ -56,9 +57,10 @@ impl Home {
 \_____/\__,_/___|\__, \_| \_/_/\_\
                   __/ |
                  |___ /
-"#;
+"#,
+        );
 
-        return Paragraph::new(LAZYNX_TITLE);
+        return Paragraph::new(lazynx_title);
     }
 }
 
