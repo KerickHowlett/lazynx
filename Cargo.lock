@@ -2476,7 +2476,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "shared_common"
+name = "tui"
 version = "0.1.0"
 dependencies = [
  "color-eyre",

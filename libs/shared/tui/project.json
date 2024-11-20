@@ -1,5 +1,5 @@
 {
-  "name": "shared_common",
+  "name": "tui",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/shared/tui/src",
@@ -11,7 +11,7 @@
         "{options.target-dir}"
       ],
       "options": {
-        "target-dir": "dist/target/shared_common"
+        "target-dir": "dist/target/tui"
       }
     },
     "test": {
@@ -21,7 +21,7 @@
         "{options.target-dir}"
       ],
       "options": {
-        "target-dir": "dist/target/shared_common"
+        "target-dir": "dist/target/tui"
       },
       "configurations": {
         "production": {
@@ -36,7 +36,7 @@
         "{options.target-dir}"
       ],
       "options": {
-        "target-dir": "dist/target/shared_common"
+        "target-dir": "dist/target/tui"
       }
     }
   }
