@@ -2476,14 +2476,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "tui"
+name = "shared_logger"
 version = "0.1.0"
-dependencies = [
- "color-eyre",
- "serde",
- "serde_json",
- "strum",
-]
 
 [[package]]
 name = "shell-escape"
@@ -2917,6 +2911,24 @@ dependencies = [
  "tracing",
  "tracing-core",
  "tracing-log",
+]
+
+[[package]]
+name = "tui"
+version = "0.1.0"
+dependencies = [
+ "color-eyre",
+ "crossterm",
+ "futures",
+ "ratatui",
+ "serde",
+ "serde_json",
+ "strum",
+ "tokio",
+ "tokio-util",
+ "tracing",
+ "tracing-error",
+ "tracing-subscriber",
 ]
 
 [[package]]
