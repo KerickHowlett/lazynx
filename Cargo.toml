@@ -1,7 +1,12 @@
 
 [workspace]
 resolver = '2'
-members = ['apps/lazynx', 'libs/shared/logger', 'libs/shared/tui']
+members = [
+	'apps/lazynx',
+	'libs/shared/logger',
+	'libs/shared/tui',
+	'libs/shared/errors',
+]
 
 [profile.release]
 lto = true

@@ -2476,6 +2476,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "shared_errors"
+version = "0.1.0"
+dependencies = [
+ "better-panic",
+ "color-eyre",
+ "libc",
+ "strip-ansi-escapes",
+ "tracing",
+ "tracing-error",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "shared_logger"
 version = "0.1.0"
 dependencies = [
