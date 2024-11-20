@@ -2,27 +2,24 @@ use color_eyre::Result;
 use tracing_error::ErrorLayer;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
-use crate::config;
+use crate::logger_config::LoggerConfig;
 
-lazy_static::lazy_static! {
-    pub static ref LOG_ENV: String = format!("{}_LOG_LEVEL", config::PROJECT_NAME.clone());
-    pub static ref LOG_FILE: String = format!("{}.log", env!("CARGO_PKG_NAME"));
-}
-
-pub fn init() -> Result<()> {
-    let directory = config::get_data_dir();
+pub fn init(config: &impl LoggerConfig) -> Result<()> {
+    let directory = config.get_data_dir();
     std::fs::create_dir_all(directory.clone())?;
 
-    let log_path = directory.join(LOG_FILE.clone());
+    let log_level = config.get_log_level().clone();
+    let log_path = directory.join(log_level);
     let log_file = std::fs::File::create(log_path)?;
     let env_filter = EnvFilter::builder().with_default_directive(tracing::Level::INFO.into());
 
     // If the `RUST_LOG` environment variable is set, use that as the default, otherwise use the
     // value of the `LOG_ENV` environment variable. If the `LOG_ENV` environment variable contains
     // errors, then this will return an error.
+    let log_env = config.get_log_env().clone();
     let env_filter = env_filter
         .try_from_env()
-        .or_else(|_| env_filter.with_env_var(LOG_ENV.clone()).from_env())?;
+        .or_else(|_| env_filter.with_env_var(log_env).from_env())?;
 
     let file_subscriber = fmt::layer()
         .with_file(true)
