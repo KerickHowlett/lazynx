@@ -2930,6 +2930,7 @@ dependencies = [
  "ratatui",
  "serde",
  "serde_json",
+ "signal-hook",
  "strum",
  "tokio",
  "tokio-util",

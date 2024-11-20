@@ -4,18 +4,18 @@ use std::{
     time::Duration,
 };
 
+use crate::event::Event;
 use color_eyre::Result;
 use crossterm::{
     cursor,
     event::{
         DisableBracketedPaste, DisableMouseCapture, EnableBracketedPaste, EnableMouseCapture,
-        Event as CrosstermEvent, EventStream, KeyEvent, KeyEventKind, MouseEvent,
+        Event as CrosstermEvent, EventStream, KeyEventKind,
     },
     terminal::{EnterAlternateScreen, LeaveAlternateScreen},
 };
 use futures::{FutureExt, StreamExt};
 use ratatui::backend::CrosstermBackend as Backend;
-use serde::{Deserialize, Serialize};
 use tokio::{
     sync::mpsc::{self, UnboundedReceiver, UnboundedSender},
     task::JoinHandle,
