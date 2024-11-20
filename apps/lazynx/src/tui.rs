@@ -78,11 +78,13 @@ impl Tui {
         self
     }
 
+    // TODO: Remove this if this ends up NOT being used.
     // pub fn mouse(mut self, mouse: bool) -> Self {
     //     self.mouse = mouse;
     //     self
     // }
 
+    // TODO: Remove this if this ends up NOT being used.
     // pub fn paste(mut self, paste: bool) -> Self {
     //     self.paste = paste;
     //     self
