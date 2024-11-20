@@ -2478,6 +2478,12 @@ dependencies = [
 [[package]]
 name = "shared_common"
 version = "0.1.0"
+dependencies = [
+ "color-eyre",
+ "serde",
+ "serde_json",
+ "strum",
+]
 
 [[package]]
 name = "shell-escape"
