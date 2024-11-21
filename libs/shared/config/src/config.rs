@@ -11,8 +11,6 @@ use tracing::error;
 
 use shared_common::action::Action;
 
-const DEFAULT_CONFIG: &str = include_str!("../.config/config.json5");
-
 #[derive(Clone, Debug, Deserialize, Default)]
 pub struct AppConfig {
     #[serde(default)]
@@ -44,8 +42,8 @@ lazy_static! {
 }
 
 impl<TMode: for<'de> Deserialize<'de> + Default + Hash + Eq + Copy> Config<TMode> {
-    pub fn new() -> Result<Self, config::ConfigError> {
-        let default_config: Config<TMode> = json5::from_str(DEFAULT_CONFIG).unwrap();
+    pub fn new(default_config: &str) -> Result<Self, config::ConfigError> {
+        let default_config: Config<TMode> = json5::from_str(default_config).unwrap();
         let data_dir = get_data_dir();
         let config_dir = get_config_dir();
         let mut builder = config::Config::builder()
@@ -124,10 +122,7 @@ fn project_directory() -> Option<ProjectDirs> {
 pub struct KeyBindings<TMode>(pub HashMap<TMode, HashMap<Vec<KeyEvent>, Action>>);
 
 impl<'de, TMode: Deserialize<'de> + Eq + Hash> Deserialize<'de> for KeyBindings<TMode> {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         let parsed_map = HashMap::<TMode, HashMap<String, Action>>::deserialize(deserializer)?;
 
         let keybindings = parsed_map
