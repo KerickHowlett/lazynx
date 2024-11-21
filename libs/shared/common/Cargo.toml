@@ -1,17 +1,14 @@
 [package]
-name = "shared_tui"
+name = "shared_common"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 color-eyre = "0.6.3"
 crossterm = { version = "0.28.1", features = ["serde", "event-stream"] }
-shared_common = { path = "../common" }
-futures = "0.3.31"
 ratatui = { version = "0.29.0", features = ["serde", "macros"] }
-signal-hook = "0.3.17"
+serde = { version = "1.0.211", features = ["derive"] }
+serde_json = "1.0.132"
+strum = { version = "0.26.3", features = ["derive"] }
 tokio = { version = "1.40.0", features = ["full"] }
 tokio-util = "0.7.12"
-tracing = "0.1.40"
-tracing-error = "0.2.0"
-tracing-subscriber = { version = "0.3.18", features = ["env-filter", "serde"] }

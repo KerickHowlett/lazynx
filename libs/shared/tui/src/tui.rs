@@ -4,7 +4,6 @@ use std::{
     time::Duration,
 };
 
-use crate::event::Event;
 use color_eyre::Result;
 use crossterm::{
     cursor,
@@ -16,6 +15,7 @@ use crossterm::{
 };
 use futures::{FutureExt, StreamExt};
 use ratatui::backend::CrosstermBackend as Backend;
+use shared_common::event::Event;
 use tokio::{
     sync::mpsc::{self, UnboundedReceiver, UnboundedSender},
     task::JoinHandle,
