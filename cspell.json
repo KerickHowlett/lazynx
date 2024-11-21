@@ -11,12 +11,15 @@
         "typescript"
     ],
     "words": [
+        "backtab",
         "chrono",
         "consts",
         "crossterm",
         "Datelike",
         "lazynx",
         "libc",
+        "pagedown",
+        "pageup",
         "ratatui",
         "scopeguard",
         "SIGTSTP",
