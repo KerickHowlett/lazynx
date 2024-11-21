@@ -58,13 +58,6 @@
       "outputs": [
         "{options.target-dir}"
       ]
-    },
-    "watch": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "cargo watch --clear -s 'cargo run --quiet'",
-        "cwd": "apps/lazynx"
-      }
     }
   }
 }

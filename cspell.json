@@ -24,6 +24,5 @@
         "scopeguard",
         "SIGTSTP",
         "VERGEN",
-        "watchexec"
     ]
 }

@@ -15,7 +15,6 @@
         "nx": "nx",
         "prepare": "husky",
         "start": "nx run lazynx:run",
-        "watch": "nx run lazynx:watch",
         "test": "nx test",
         "test:watch": "nx test --watch"
     },
