@@ -2482,6 +2482,7 @@ dependencies = [
  "better-panic",
  "color-eyre",
  "libc",
+ "shared_tui",
  "strip-ansi-escapes",
  "tracing",
  "tracing-error",
