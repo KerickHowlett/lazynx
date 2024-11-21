@@ -1436,6 +1436,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "shared_config"
+version = "0.1.0"
+dependencies = [
+ "color-eyre",
+ "config",
+ "crossterm",
+ "derive_deref",
+ "directories",
+ "json5",
+ "lazy_static",
+ "pretty_assertions",
+ "ratatui",
+ "serde",
+ "serde_json",
+ "shared_common",
+ "tracing",
+ "tracing-error",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "shared_errors"
 version = "0.1.0"
 dependencies = [
