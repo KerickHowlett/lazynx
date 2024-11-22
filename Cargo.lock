@@ -1457,40 +1457,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "shared_errors"
+name = "shared_tui"
 version = "0.1.0"
 dependencies = [
  "better-panic",
  "color-eyre",
- "libc",
- "shared_tui",
- "strip-ansi-escapes",
- "tracing",
- "tracing-error",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "shared_logger"
-version = "0.1.0"
-dependencies = [
- "color-eyre",
- "lazy_static",
- "tracing",
- "tracing-error",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "shared_tui"
-version = "0.1.0"
-dependencies = [
- "color-eyre",
  "crossterm",
  "futures",
+ "libc",
  "ratatui",
  "shared_common",
  "signal-hook",
+ "strip-ansi-escapes",
  "tokio",
  "tokio-util",
  "tracing",

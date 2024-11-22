@@ -1,9 +1,9 @@
-use std::env;
+use std::{env, panic};
 
 use color_eyre::Result;
 use tracing::error;
 
-use shared_tui::tui::Tui;
+use crate::tui::Tui;
 
 pub fn init() -> Result<()> {
     let (panic_hook, eyre_hook) = color_eyre::config::HookBuilder::default()
@@ -15,8 +15,10 @@ pub fn init() -> Result<()> {
         .display_location_section(false)
         .display_env_section(false)
         .into_hooks();
+
     eyre_hook.install()?;
-    std::panic::set_hook(Box::new(move |panic_info| {
+
+    panic::set_hook(Box::new(move |panic_info| {
         if let Ok(mut t) = Tui::new() {
             if let Err(r) = t.exit() {
                 error!("Unable to exit Terminal: {:?}", r);
@@ -49,6 +51,7 @@ pub fn init() -> Result<()> {
 
         std::process::exit(libc::EXIT_FAILURE);
     }));
+
     Ok(())
 }
 

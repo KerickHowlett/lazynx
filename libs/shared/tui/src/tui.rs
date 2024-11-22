@@ -25,15 +25,15 @@ use tokio_util::sync::CancellationToken;
 use tracing::error;
 
 pub struct Tui {
-    pub terminal: ratatui::Terminal<Backend<Stdout>>,
-    pub task: JoinHandle<()>,
     pub cancellation_token: CancellationToken,
     pub event_rx: UnboundedReceiver<Event>,
     pub event_tx: UnboundedSender<Event>,
     pub frame_rate: f64,
-    pub tick_rate: f64,
     pub mouse: bool,
     pub paste: bool,
+    pub task: JoinHandle<()>,
+    pub terminal: ratatui::Terminal<Backend<Stdout>>,
+    pub tick_rate: f64,
 }
 
 impl Tui {
