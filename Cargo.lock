@@ -911,6 +911,7 @@ dependencies = [
  "ratatui",
  "scopeguard",
  "serde",
+ "serde_derive",
  "serde_json",
  "signal-hook",
  "strip-ansi-escapes",

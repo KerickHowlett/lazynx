@@ -1,6 +1,7 @@
 use std::rc::Rc;
 
 use color_eyre::Result;
+use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use ratatui::{prelude::*, widgets::*};
 use tokio::sync::mpsc::UnboundedSender;
 
@@ -65,6 +66,18 @@ impl Status {
 }
 
 impl Component for Status {
+    fn handle_key_events(&mut self, key: KeyEvent) -> Option<Action> {
+        if let KeyEvent {
+            code: KeyCode::Char('c'),
+            modifiers: KeyModifiers::CONTROL,
+            ..
+        } = key
+        {
+            return Some(Action::Quit);
+        };
+        None
+    }
+
     fn register_action_handler(&mut self, tx: UnboundedSender<Action>) -> Result<()> {
         self.command_tx = Some(tx);
         Ok(())
@@ -77,18 +90,13 @@ impl Component for Status {
 
     fn update(&mut self, action: Action) -> Result<Option<Action>> {
         match action {
-            Action::Tick => {
-                // add any logic here that should run on every tick
-            }
-            Action::Render => {
-                // add any logic here that should run on every render
-            }
+            Action::Init => self.init()?,
             _ => {}
         }
         Ok(None)
     }
 
-    fn draw(&mut self, frame: &mut Frame, area: Rect) -> Result<()> {
+    fn draw(&mut self, frame: &mut Frame, area: Rect) {
         let block = self.create_block();
         let chunks = self.create_layout(block.inner(area));
         frame.render_widget(block, area);
@@ -98,7 +106,5 @@ impl Component for Status {
 
         let copyright = self.get_copyright();
         frame.render_widget(copyright, chunks[1]);
-
-        Ok(())
     }
 }
