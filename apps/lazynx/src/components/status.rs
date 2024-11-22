@@ -8,12 +8,12 @@ use super::Component;
 use crate::{action::Action, config::Config};
 
 #[derive(Default)]
-pub struct Home {
+pub struct Status {
     command_tx: Option<UnboundedSender<Action>>,
     config: Config,
 }
 
-impl Home {
+impl Status {
     pub fn new() -> Self {
         Self::default()
     }
@@ -64,7 +64,7 @@ impl Home {
     }
 }
 
-impl Component for Home {
+impl Component for Status {
     fn register_action_handler(&mut self, tx: UnboundedSender<Action>) -> Result<()> {
         self.command_tx = Some(tx);
         Ok(())
