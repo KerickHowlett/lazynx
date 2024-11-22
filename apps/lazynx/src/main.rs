@@ -21,9 +21,8 @@ async fn main() -> Result<()> {
 
     log::debug!("Starting in main...");
     let args = CLI::parse();
-    let (tick_rate, frame_rate) = (args.tick_rate, args.frame_rate);
     let config = Config::new()?;
-    let mut app = Runner::new(config, tick_rate, frame_rate)?;
+    let mut app = Runner::new(config, args.tick_rate, args.frame_rate)?;
 
     app.run().await?;
     Ok(())
