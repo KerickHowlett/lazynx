@@ -1,5 +1,4 @@
 use crate::{action::Action, event::Event};
-
 use color_eyre::Result;
 use crossterm::event::{KeyEvent, MouseEvent};
 use ratatui::{
