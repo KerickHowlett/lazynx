@@ -3,16 +3,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum Event {
-    Init,
-    Quit,
-    Error,
     Closed,
-    Tick,
-    Render,
+    Error,
     FocusGained,
     FocusLost,
-    Paste(String),
+    Init,
     Key(KeyEvent),
     Mouse(MouseEvent),
+    Paste(String),
+    Quit,
+    Render,
     Resize(u16, u16),
+    Tick,
 }

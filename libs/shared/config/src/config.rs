@@ -27,18 +27,26 @@ pub struct AppConfig {
 }
 
 #[derive(Clone, Debug, Default, Deserialize)]
-pub struct Config<TMode> {
+pub struct Config<TMode, TAction>
+where
+    TMode: Eq + Hash,
+    TAction: Default + Copy + Eq + Hash,
+{
     #[serde(default, flatten)]
     pub config: AppConfig,
-    #[serde(default, bound = "TMode: Eq + Hash")]
-    pub keybindings: KeyBindings<TMode>,
+    #[serde(default, bound = "TMode: Deserialize<'de>, TAction: Deserialize<'de>")]
+    pub keybindings: KeyBindings<TMode, TAction>,
     #[serde(default)]
     pub styles: Styles<TMode>,
 }
 
-impl<TMode: for<'de> Deserialize<'de> + Default + Hash + Eq + Copy> Config<TMode> {
+impl<TMode, TAction> Config<TMode, TAction>
+where
+    TMode: for<'de> Deserialize<'de> + Default + Hash + Eq + Copy,
+    TAction: for<'a> Deserialize<'a> + Default + Copy + Eq + Hash,
+{
     pub fn new(default_config: &str) -> Result<Self, config::ConfigError> {
-        let default_config: Config<TMode> = json5::from_str(default_config).unwrap();
+        let default_config: Config<TMode, TAction> = json5::from_str(default_config).unwrap();
         let data_dir = get_data_dir();
         let config_dir = get_config_dir();
         let mut builder = config::Config::builder()
@@ -52,6 +60,7 @@ impl<TMode: for<'de> Deserialize<'de> + Default + Hash + Eq + Copy> Config<TMode
             ("config.toml", config::FileFormat::Toml),
             ("config.ini", config::FileFormat::Ini),
         ];
+
         let mut found_config = false;
         for (file, format) in &config_files {
             let source = config::File::from(config_dir.join(file))
@@ -62,14 +71,14 @@ impl<TMode: for<'de> Deserialize<'de> + Default + Hash + Eq + Copy> Config<TMode
                 found_config = true
             }
         }
+
         if !found_config {
             error!("No configuration file found. Application may not behave as expected");
         }
 
-        let mut cfg: Self = builder.build()?.try_deserialize()?;
-
+        let mut config: Self = builder.build()?.try_deserialize()?;
         for (mode, default_bindings) in default_config.keybindings.iter() {
-            let user_bindings = cfg.keybindings.entry(*mode).or_default();
+            let user_bindings = config.keybindings.entry(*mode).or_default();
             for (key, cmd) in default_bindings.iter() {
                 user_bindings
                     .entry(key.clone())
@@ -77,13 +86,13 @@ impl<TMode: for<'de> Deserialize<'de> + Default + Hash + Eq + Copy> Config<TMode
             }
         }
         for (mode, default_styles) in default_config.styles.iter() {
-            let user_styles = cfg.styles.entry(*mode).or_default();
+            let user_styles = config.styles.entry(*mode).or_default();
             for (style_key, style) in default_styles.iter() {
                 user_styles.entry(style_key.clone()).or_insert(*style);
             }
         }
 
-        Ok(cfg)
+        Ok(config)
     }
 }
 

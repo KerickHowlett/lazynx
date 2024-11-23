@@ -95,7 +95,7 @@ impl Runner {
                 Action::Render => {
                     tui.draw(|f| {
                         for component in self.components.iter_mut() {
-                            component.draw(f, f.area());
+                            component.render(f, f.area());
                         }
                     })?;
                 }

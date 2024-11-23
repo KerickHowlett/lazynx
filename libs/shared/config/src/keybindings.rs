@@ -2,15 +2,18 @@ use color_eyre::Result;
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use derive_deref::{Deref, DerefMut};
 use serde::{de::Deserializer, Deserialize};
-use shared_common::action::Action;
 use std::{collections::HashMap, default::Default, hash::Hash};
 
 #[derive(Clone, Debug, Default, Deref, DerefMut)]
-pub struct KeyBindings<TMode>(pub HashMap<TMode, HashMap<Vec<KeyEvent>, Action>>);
+pub struct KeyBindings<TMode, TAction>(pub HashMap<TMode, HashMap<Vec<KeyEvent>, TAction>>);
 
-impl<'de, TMode: Deserialize<'de> + Eq + Hash> Deserialize<'de> for KeyBindings<TMode> {
+impl<'de, TMode, TAction> Deserialize<'de> for KeyBindings<TMode, TAction>
+where
+    TMode: Deserialize<'de> + Eq + Hash,
+    TAction: Deserialize<'de> + Eq + Hash,
+{
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let parsed_map = HashMap::<TMode, HashMap<String, Action>>::deserialize(deserializer)?;
+        let parsed_map = HashMap::<TMode, HashMap<String, TAction>>::deserialize(deserializer)?;
 
         let keybindings = parsed_map
             .into_iter()

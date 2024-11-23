@@ -96,7 +96,7 @@ impl Component for Status {
         Ok(None)
     }
 
-    fn draw(&mut self, frame: &mut Frame, area: Rect) {
+    fn render(&mut self, frame: &mut Frame, area: Rect) {
         let block = self.create_block();
         let chunks = self.create_layout(block.inner(area));
         frame.render_widget(block, area);

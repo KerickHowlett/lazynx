@@ -1423,20 +1423,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "shared_common"
-version = "0.1.0"
-dependencies = [
- "color-eyre",
- "crossterm",
- "ratatui",
- "serde",
- "serde_json",
- "strum",
- "tokio",
- "tokio-util",
-]
-
-[[package]]
 name = "shared_config"
 version = "0.1.0"
 dependencies = [
@@ -1451,7 +1437,6 @@ dependencies = [
  "ratatui",
  "serde",
  "serde_json",
- "shared_common",
  "tracing",
  "tracing-error",
  "tracing-subscriber",
@@ -1466,10 +1451,14 @@ dependencies = [
  "crossterm",
  "futures",
  "libc",
+ "log",
  "ratatui",
- "shared_common",
+ "serde",
+ "serde_derive",
+ "serde_json",
  "signal-hook",
  "strip-ansi-escapes",
+ "strum",
  "tokio",
  "tokio-util",
  "tracing",

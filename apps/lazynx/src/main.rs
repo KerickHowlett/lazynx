@@ -5,12 +5,12 @@ use color_eyre::Result;
 use crate::{config::Config, runner::Runner};
 
 mod action;
-mod app;
 mod cli;
 mod components;
 mod config;
 mod errors;
 mod logging;
+mod mode;
 mod runner;
 mod tui;
 

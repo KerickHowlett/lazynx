@@ -3,9 +3,9 @@ use std::{env, panic};
 use color_eyre::Result;
 use tracing::error;
 
-use crate::tui::Tui;
+use crate::Tui;
 
-pub fn init() -> Result<()> {
+pub fn initialize_panic_handler() -> Result<()> {
     let (panic_hook, eyre_hook) = color_eyre::config::HookBuilder::default()
         .panic_section(format!(
             "This is a bug. Consider reporting it at {}",
