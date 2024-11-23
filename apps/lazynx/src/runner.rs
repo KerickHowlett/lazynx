@@ -1,25 +1,23 @@
 use color_eyre::eyre::Result;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
 
-use crate::{
-    action::Action,
-    components::{status::Status, Component},
-    config::Config,
-    tui,
-};
+use config::Config;
+use tui::{self, Action, Component};
+
+use crate::{mode::Mode, status::Status};
 
 #[derive(Default)]
 pub struct Runner {
-    pub config: Config,
+    pub config: Config<Mode>,
     pub tick_rate: f64,
     pub frame_rate: f64,
-    pub components: Vec<Box<dyn Component>>,
+    pub components: Vec<Box<dyn Component<Config<Mode>>>>,
     pub should_quit: bool,
     pub should_suspend: bool,
 }
 
 impl Runner {
-    pub fn new(config: Config, tick_rate: f64, frame_rate: f64) -> Result<Self> {
+    pub fn new(config: Config<Mode>, tick_rate: f64, frame_rate: f64) -> Result<Self> {
         let status = Status::new();
         Ok(Self {
             components: vec![Box::new(status)],
