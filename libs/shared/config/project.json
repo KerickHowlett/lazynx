@@ -1,43 +1,43 @@
 {
-  "name": "shared_config",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "app_config",
   "projectType": "library",
   "sourceRoot": "libs/shared/config/src",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@monodon/rust:check",
-      "outputs": [
-        "{options.target-dir}"
-      ],
       "options": {
-        "target-dir": "dist/target/shared_config"
-      }
-    },
-    "test": {
-      "cache": true,
-      "executor": "@monodon/rust:test",
-      "outputs": [
-        "{options.target-dir}"
-      ],
-      "options": {
-        "target-dir": "dist/target/shared_config"
+        "target-dir": "dist/target/app_config"
       },
-      "configurations": {
-        "production": {
-          "release": true
-        }
-      }
+      "outputs": [
+        "{options.target-dir}"
+      ]
     },
     "lint": {
       "cache": true,
       "executor": "@monodon/rust:lint",
+      "options": {
+        "target-dir": "dist/target/app_config"
+      },
       "outputs": [
         "{options.target-dir}"
-      ],
+      ]
+    },
+    "test": {
+      "cache": true,
+      "configurations": {
+        "production": {
+          "release": true
+        }
+      },
+      "executor": "@monodon/rust:test",
       "options": {
-        "target-dir": "dist/target/shared_config"
-      }
+        "target-dir": "dist/target/app_config"
+      },
+      "outputs": [
+        "{options.target-dir}"
+      ]
     }
-  },
-  "tags": []
+  }
 }
