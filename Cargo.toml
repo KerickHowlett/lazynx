@@ -6,6 +6,8 @@ members = [
 	'libs/shared/config',
 	'libs/shared/tui',
 	'libs/shared/utils',
+	'libs/status',
+	'libs/shared/common',
 ]
 
 [profile.release]

@@ -6,14 +6,12 @@ use ratatui::{prelude::*, widgets::*};
 use tokio::sync::mpsc::UnboundedSender;
 
 use app_config::Config;
-use tui::{Action, Component};
-
-use crate::mode::Mode;
+use common::{Action, Component};
 
 #[derive(Default)]
 pub struct Status {
     command_tx: Option<UnboundedSender<Action>>,
-    config: Config<Mode>,
+    config: Config,
 }
 
 impl Status {
@@ -67,7 +65,7 @@ impl Status {
     }
 }
 
-impl Component<Config<Mode>> for Status {
+impl Component<Config> for Status {
     fn handle_key_events(&mut self, key: KeyEvent) -> Option<Action> {
         if let KeyEvent {
             code: KeyCode::Char('c'),
@@ -85,7 +83,7 @@ impl Component<Config<Mode>> for Status {
         Ok(())
     }
 
-    fn register_config_handler(&mut self, config: Config<Mode>) -> Result<()> {
+    fn register_config_handler(&mut self, config: Config) -> Result<()> {
         self.config = config;
         Ok(())
     }

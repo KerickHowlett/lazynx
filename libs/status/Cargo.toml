@@ -1,0 +1,17 @@
+[package]
+name = "status"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Local Dependencies
+app_config = { path = "../../libs/shared/config" }
+common = { path = "../../libs/shared/common" }
+
+# Third-Party Dependencies
+chrono = "0.4.38"
+color-eyre = "0.6.3"
+crossterm = { version = "0.28.1", features = ["serde", "event-stream"] }
+ratatui = { version = "0.29.0", features = ["serde", "macros"] }
+tokio = { version = "1.40.0", features = ["full"] }
+tokio-util = "0.7.12"

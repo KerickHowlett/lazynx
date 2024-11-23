@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+# Local Dependencies
+common = { path = "../common" }
+
+# Third-Party Dependencies
 better-panic = "0.3.0"
 color-eyre = "0.6.3"
 crossterm = { version = "0.28.1", features = ["serde", "event-stream"] }

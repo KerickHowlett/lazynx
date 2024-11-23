@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+# Local Dependencies
+common = { path = "../common" }
+
+# Third-Party Dependencies
 color-eyre = "0.6.3"
 config = "0.14.0"
 crossterm = { version = "0.28.1", features = ["serde", "event-stream"] }
@@ -18,4 +22,3 @@ serde_json = "1.0.132"
 tracing = "0.1.40"
 tracing-error = "0.2.0"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter", "serde"] }
-tui = { path = "../tui" }

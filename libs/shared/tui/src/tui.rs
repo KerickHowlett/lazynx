@@ -17,7 +17,7 @@ use tokio::{
 };
 use tokio_util::sync::CancellationToken;
 
-use crate::event::Event;
+use common::Event;
 
 pub type Frame<'a> = ratatui::Frame<'a>;
 

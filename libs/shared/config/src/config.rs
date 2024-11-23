@@ -3,10 +3,10 @@ use color_eyre::Result;
 use directories::ProjectDirs;
 use lazy_static::lazy_static;
 use serde::Deserialize;
-use std::{default::Default, env, hash::Hash, path::PathBuf};
+use std::{default::Default, env, path::PathBuf};
 use tracing::error;
 
-use tui::Action;
+use common::AppMode;
 
 lazy_static! {
     pub static ref PROJECT_NAME: String = env!("CARGO_CRATE_NAME").to_uppercase().to_string();
@@ -29,24 +29,18 @@ pub struct AppConfig {
 }
 
 #[derive(Clone, Debug, Default, Deserialize)]
-pub struct Config<TMode>
-where
-    TMode: Eq + Hash,
-{
+pub struct Config {
     #[serde(default, flatten)]
     pub config: AppConfig,
-    #[serde(default, bound = "TMode: Deserialize<'de>")]
-    pub keybindings: KeyBindings<TMode, Action>,
     #[serde(default)]
-    pub styles: Styles<TMode>,
+    pub keybindings: KeyBindings,
+    #[serde(default)]
+    pub styles: Styles<AppMode>,
 }
 
-impl<TMode> Config<TMode>
-where
-    TMode: for<'de> Deserialize<'de> + Default + Copy + Eq + Hash,
-{
+impl Config {
     pub fn new(default_config: &str) -> Result<Self, config::ConfigError> {
-        let default_config: Config<TMode> = json5::from_str(default_config).unwrap();
+        let default_config: Config = json5::from_str(default_config).unwrap();
         let data_dir = get_data_dir();
         let config_dir = get_config_dir();
         let mut builder = config::Config::builder()

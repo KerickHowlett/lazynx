@@ -13,8 +13,6 @@ pub trait Component<TConfig> {
     ///
     /// # Arguments
     ///
-    /// * `area` - Rectangular area to initialize the component within.
-    ///
     /// # Returns
     ///
     /// * `Result<()>` - An Ok result or an error.
@@ -114,8 +112,6 @@ pub trait Component<TConfig> {
     /// # Arguments
     ///
     /// * `f` - A frame used for rendering.
-    /// * `area` - The area in which the component should be drawn.
-    ///
     /// # Returns
     ///
     /// * `Result<()>` - An Ok result or an error.

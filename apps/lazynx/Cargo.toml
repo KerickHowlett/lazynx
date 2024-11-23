@@ -6,6 +6,14 @@ description = "The laziest means of managing your Nx workspace!"
 authors = ["Kerick Howlett <8661181+KerickHowlett@users.noreply.github.com>"]
 
 [dependencies]
+# Local Dependencies
+app_config = { path = "../../libs/shared/config" }
+common = { path = "../../libs/shared/common" }
+utils = { path = "../../libs/shared/utils" }
+status = { path = "../../libs/status" }
+tui = { path = "../../libs/shared/tui" }
+
+# Third-Party Dependencies
 anyhow = "1.0.93"
 better-panic = "0.3.0"
 chrono = "0.4.38"
@@ -33,14 +41,11 @@ scopeguard = "1.2.0"
 serde = { version = "1.0.211", features = ["derive"] }
 serde_derive = "1.0.215"
 serde_json = "1.0.132"
-app_config = { path = "../../libs/shared/config" }
 signal-hook = "0.3.17"
 strip-ansi-escapes = "0.2.0"
 strum = { version = "0.26.3", features = ["derive"] }
 tokio = { version = "1.40.0", features = ["full"] }
 tokio-util = "0.7.12"
-utils = { path = "../../libs/shared/utils" }
 tracing = "0.1.40"
 tracing-error = "0.2.0"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter", "serde"] }
-tui = { path = "../../libs/shared/tui" }

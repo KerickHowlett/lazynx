@@ -2,22 +2,23 @@ use color_eyre::eyre::Result;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
 
 use app_config::Config;
-use tui::{self, Action, Component};
+use common::{Action, Component, Event};
+use tui::{self};
 
-use crate::{mode::Mode, status::Status};
+use status::Status;
 
 #[derive(Default)]
 pub struct Runner {
-    pub config: Config<Mode>,
+    pub config: Config,
     pub tick_rate: f64,
     pub frame_rate: f64,
-    pub components: Vec<Box<dyn Component<Config<Mode>>>>,
+    pub components: Vec<Box<dyn Component<Config>>>,
     pub should_quit: bool,
     pub should_suspend: bool,
 }
 
 impl Runner {
-    pub fn new(config: Config<Mode>, tick_rate: f64, frame_rate: f64) -> Result<Self> {
+    pub fn new(config: Config, tick_rate: f64, frame_rate: f64) -> Result<Self> {
         let status = Status::new();
         Ok(Self {
             components: vec![Box::new(status)],
@@ -112,15 +113,15 @@ impl Runner {
 
     async fn handle_event(
         &mut self,
-        event: tui::Event,
+        event: Event,
         action_tx: &UnboundedSender<Action>,
     ) -> Result<()> {
         match event {
-            tui::Event::Init => action_tx.send(Action::Init)?,
-            tui::Event::Quit => action_tx.send(Action::Quit)?,
-            tui::Event::Render => action_tx.send(Action::Render)?,
-            tui::Event::Tick => action_tx.send(Action::Tick)?,
-            tui::Event::Resize(x, y) => action_tx.send(Action::Resize { x, y })?,
+            Event::Init => action_tx.send(Action::Init)?,
+            Event::Quit => action_tx.send(Action::Quit)?,
+            Event::Render => action_tx.send(Action::Render)?,
+            Event::Tick => action_tx.send(Action::Tick)?,
+            Event::Resize(x, y) => action_tx.send(Action::Resize { x, y })?,
             other_event => {
                 for component in self.components.iter_mut() {
                     if let Some(action) = component.handle_events(other_event.clone()) {

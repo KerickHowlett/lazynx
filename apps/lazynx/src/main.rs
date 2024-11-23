@@ -2,7 +2,6 @@ mod cli;
 mod consts;
 mod mode;
 mod runner;
-mod status;
 
 use clap::Parser;
 use cli::CLI;
@@ -16,7 +15,6 @@ use tui::{
 
 use crate::{
     consts::{CONFIG_PATH, PROJECT_NAME},
-    mode::Mode,
     runner::Runner,
 };
 
@@ -30,7 +28,7 @@ async fn main() -> Result<()> {
     log::debug!("Starting in main...");
     let args = CLI::parse();
 
-    let config = Config::<Mode>::new(CONFIG_PATH)?;
+    let config = Config::new(CONFIG_PATH)?;
 
     let mut app = Runner::new(config, args.tick_rate, args.frame_rate)?;
 
