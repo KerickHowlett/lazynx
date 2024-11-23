@@ -1,6 +1,5 @@
 mod cli;
 mod consts;
-mod mode;
 mod runner;
 
 use clap::Parser;
