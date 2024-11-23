@@ -1,7 +1,7 @@
 use color_eyre::eyre::Result;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
 
-use config::Config;
+use app_config::Config;
 use tui::{self, Action, Component};
 
 use crate::{mode::Mode, status::Status};

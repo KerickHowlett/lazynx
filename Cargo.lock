@@ -115,6 +115,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4c95c10ba0b00a02636238b814946408b1322d5ac4760326e6fb8ec956d85775"
 
 [[package]]
+name = "app_config"
+version = "0.1.0"
+dependencies = [
+ "color-eyre",
+ "config",
+ "crossterm",
+ "derive_deref",
+ "directories",
+ "json5",
+ "lazy_static",
+ "pretty_assertions",
+ "ratatui",
+ "serde",
+ "serde_json",
+ "tracing",
+ "tracing-error",
+ "tracing-subscriber",
+ "tui",
+]
+
+[[package]]
 name = "arraydeque"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -331,27 +352,6 @@ dependencies = [
  "ryu",
  "serde",
  "static_assertions",
-]
-
-[[package]]
-name = "config"
-version = "0.1.0"
-dependencies = [
- "color-eyre",
- "config 0.14.1",
- "crossterm",
- "derive_deref",
- "directories",
- "json5",
- "lazy_static",
- "pretty_assertions",
- "ratatui",
- "serde",
- "serde_json",
- "tracing",
- "tracing-error",
- "tracing-subscriber",
- "tui",
 ]
 
 [[package]]
@@ -914,11 +914,11 @@ name = "lazynx"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "app_config",
  "better-panic",
  "chrono",
  "clap",
  "color-eyre",
- "config 0.1.0",
  "crossterm",
  "derive_deref",
  "directories",

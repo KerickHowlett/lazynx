@@ -8,7 +8,7 @@ use clap::Parser;
 use cli::CLI;
 use color_eyre::Result;
 
-use config::Config;
+use app_config::Config;
 use tui::{
     errors::initialize_panic_handler,
     logger::{initialize_logger, LoggerConfig},

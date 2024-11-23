@@ -5,7 +5,7 @@ use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use ratatui::{prelude::*, widgets::*};
 use tokio::sync::mpsc::UnboundedSender;
 
-use config::Config;
+use app_config::Config;
 use tui::{Action, Component};
 
 use crate::mode::Mode;

@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use config::{get_config_dir, get_data_dir};
+use app_config::{get_config_dir, get_data_dir};
 
 #[derive(Parser, Debug)]
 #[command(author, version = version(), about)]
