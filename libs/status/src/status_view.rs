@@ -8,9 +8,9 @@ use app_config::Config;
 use common::{Action, Component};
 
 #[derive(Default)]
-pub struct Status {}
+pub struct StatusView {}
 
-impl Status {
+impl StatusView {
     pub fn new() -> Self {
         Self::default()
     }
@@ -61,7 +61,7 @@ impl Status {
     }
 }
 
-impl Component<Config> for Status {
+impl Component<Config> for StatusView {
     fn handle_key_events(&mut self, key: KeyEvent) -> Option<Action> {
         if let KeyEvent {
             code: KeyCode::Char('c'),

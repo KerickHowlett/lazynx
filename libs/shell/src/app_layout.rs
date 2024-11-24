@@ -3,11 +3,11 @@ use ratatui::prelude::*;
 
 use app_config::Config;
 use common::{Action, Component};
-use status::Status;
+use status::StatusView;
 
 #[derive(Default)]
 pub struct AppLayout {
-    status: Status,
+    status: StatusView,
 }
 
 impl AppLayout {

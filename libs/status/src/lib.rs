@@ -1,2 +1,2 @@
-mod status;
-pub use status::*;
+mod status_view;
+pub use status_view::*;
