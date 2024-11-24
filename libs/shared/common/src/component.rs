@@ -115,5 +115,5 @@ pub trait Component<TConfig> {
     /// # Returns
     ///
     /// * `Result<()>` - An Ok result or an error.
-    fn render(&mut self, f: &mut Frame<'_>, rect: Rect);
+    fn draw(&mut self, f: &mut Frame<'_>, rect: Rect);
 }

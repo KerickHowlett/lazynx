@@ -10,7 +10,7 @@ authors = ["Kerick Howlett <8661181+KerickHowlett@users.noreply.github.com>"]
 app_config = { path = "../../libs/shared/config" }
 common = { path = "../../libs/shared/common" }
 utils = { path = "../../libs/shared/utils" }
-status = { path = "../../libs/status" }
+shell = { path = "../../libs/shell" }
 tui = { path = "../../libs/shared/tui" }
 
 # Third-Party Dependencies

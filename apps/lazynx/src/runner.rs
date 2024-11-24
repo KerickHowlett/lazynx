@@ -5,7 +5,7 @@ use app_config::Config;
 use common::{Action, Component, Event};
 use tui::{self};
 
-use status::Status;
+use shell::AppLayout;
 
 #[derive(Default)]
 pub struct Runner {
@@ -19,9 +19,9 @@ pub struct Runner {
 
 impl Runner {
     pub fn new(config: Config, tick_rate: f64, frame_rate: f64) -> Result<Self> {
-        let status = Status::new();
+        let shell = AppLayout::new();
         Ok(Self {
-            components: vec![Box::new(status)],
+            components: vec![Box::new(shell)],
             config,
             frame_rate,
             should_quit: false,
@@ -94,7 +94,7 @@ impl Runner {
                 Action::Render => {
                     tui.draw(|f| {
                         for component in self.components.iter_mut() {
-                            component.render(f, f.area());
+                            component.draw(f, f.area());
                         }
                     })?;
                 }

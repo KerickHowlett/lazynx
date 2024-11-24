@@ -8,6 +8,7 @@ members = [
 	'libs/shared/utils',
 	'libs/status',
 	'libs/shared/common',
+	'libs/shell',
 ]
 
 [profile.release]
