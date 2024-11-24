@@ -32,7 +32,7 @@ impl Component<Config> for AppLayout {
     fn draw(&mut self, frame: &mut Frame, _area: Rect) {
         let chunks = Layout::default()
             .direction(Direction::Horizontal)
-            .constraints(vec![Constraint::Min(35), Constraint::Percentage(75)])
+            .constraints(vec![Constraint::Min(38), Constraint::Percentage(75)])
             .split(frame.area());
 
         self.status.draw(frame, chunks[1]);
