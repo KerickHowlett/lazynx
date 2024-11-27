@@ -1,11 +1,9 @@
 use std::rc::Rc;
 
-use color_eyre::Result;
-use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use ratatui::{prelude::*, widgets::*};
 
 use app_config::Config;
-use common::{Action, Component};
+use common::Component;
 
 #[derive(Default)]
 pub struct StatusView {}
@@ -62,26 +60,6 @@ impl StatusView {
 }
 
 impl Component<Config> for StatusView {
-    fn handle_key_events(&mut self, key: KeyEvent) -> Option<Action> {
-        if let KeyEvent {
-            code: KeyCode::Char('c'),
-            modifiers: KeyModifiers::CONTROL,
-            ..
-        } = key
-        {
-            return Some(Action::Quit);
-        };
-        None
-    }
-
-    fn update(&mut self, action: Action) -> Result<Option<Action>> {
-        match action {
-            Action::Init => self.init()?,
-            _ => {}
-        }
-        Ok(None)
-    }
-
     fn draw(&mut self, frame: &mut Frame, area: Rect) {
         let block = self.create_block();
         let chunks = self.create_layout(block.inner(area));
