@@ -1,0 +1,43 @@
+{
+  "name": "shared_ui_sidebar",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/ui/sidebar/src",
+  "targets": {
+    "build": {
+      "executor": "@monodon/rust:check",
+      "outputs": [
+        "{options.target-dir}"
+      ],
+      "options": {
+        "target-dir": "dist/target/shared_ui_sidebar"
+      }
+    },
+    "test": {
+      "cache": true,
+      "executor": "@monodon/rust:test",
+      "outputs": [
+        "{options.target-dir}"
+      ],
+      "options": {
+        "target-dir": "dist/target/shared_ui_sidebar"
+      },
+      "configurations": {
+        "production": {
+          "release": true
+        }
+      }
+    },
+    "lint": {
+      "cache": true,
+      "executor": "@monodon/rust:lint",
+      "outputs": [
+        "{options.target-dir}"
+      ],
+      "options": {
+        "target-dir": "dist/target/shared_ui_sidebar"
+      }
+    }
+  },
+  "tags": []
+}

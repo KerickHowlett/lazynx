@@ -9,6 +9,7 @@ members = [
 	'libs/status',
 	'libs/shared/common',
 	'libs/shell',
+	'libs/shared/ui/sidebar',
 ]
 
 [profile.release]
