@@ -9,15 +9,10 @@ use common::Component;
 pub struct StatusView {}
 
 impl StatusView {
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     fn create_block(&self) -> Block {
         return Block::default()
-            .title(" Status ")
+            .title(Line::from("Status").left_aligned())
             .borders(Borders::ALL)
-            .title_alignment(Alignment::Left)
             .border_type(BorderType::Rounded)
             .padding(Padding::horizontal(2));
     }

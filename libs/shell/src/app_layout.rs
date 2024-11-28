@@ -5,8 +5,11 @@ use app_config::Config;
 use common::{Action, Component};
 use status::StatusView;
 
+use crate::sidebar_component::SidebarComponent;
+
 #[derive(Default)]
 pub struct AppLayout {
+    sidebar: SidebarComponent,
     status: StatusView,
 }
 
@@ -35,6 +38,7 @@ impl Component<Config> for AppLayout {
             .constraints(vec![Constraint::Min(38), Constraint::Percentage(75)])
             .split(frame.area());
 
+        self.sidebar.draw(frame, chunks[0]);
         self.status.draw(frame, chunks[1]);
     }
 }
