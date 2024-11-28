@@ -1407,10 +1407,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "shared_ui_sidebar"
-version = "0.1.0"
-
-[[package]]
 name = "shell"
 version = "0.1.0"
 dependencies = [

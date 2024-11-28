@@ -2,14 +2,13 @@
 [workspace]
 resolver = '2'
 members = [
-	'apps/lazynx',
-	'libs/shared/config',
-	'libs/shared/tui',
-	'libs/shared/utils',
-	'libs/status',
-	'libs/shared/common',
-	'libs/shell',
-	'libs/shared/ui/sidebar',
+    'apps/lazynx',
+    'libs/shared/config',
+    'libs/shared/tui',
+    'libs/shared/utils',
+    'libs/status',
+    'libs/shared/common',
+    'libs/shell',
 ]
 
 [profile.release]
