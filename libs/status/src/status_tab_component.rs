@@ -4,9 +4,9 @@ use app_config::Config;
 use common::Component;
 
 #[derive(Default)]
-pub struct StatusTab {}
+pub struct StatusTabComponent {}
 
-impl StatusTab {
+impl StatusTabComponent {
     pub fn new() -> Self {
         Self::default()
     }
@@ -21,7 +21,7 @@ impl StatusTab {
     }
 }
 
-impl Component<Config> for StatusTab {
+impl Component<Config> for StatusTabComponent {
     fn draw(&mut self, frame: &mut Frame, area: Rect) {
         let block = self.create_block();
 

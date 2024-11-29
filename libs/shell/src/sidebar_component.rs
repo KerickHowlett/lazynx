@@ -5,11 +5,11 @@ use ratatui::prelude::*;
 use app_config::Config;
 use common::Component;
 
-use status::StatusTab;
+use status::StatusTabComponent;
 
 #[derive(Default)]
 pub struct SidebarComponent {
-    status_tab: StatusTab,
+    status_tab: StatusTabComponent,
 }
 
 impl SidebarComponent {
