@@ -1,5 +1,5 @@
 use color_eyre::eyre::Result;
-use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
+use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
 
 use app_config::Config;
 use common::{Action, Component, Event};
@@ -75,9 +75,9 @@ impl Runner {
 
     async fn handle_action(
         &mut self,
-        action_rx: &mut tokio::sync::mpsc::UnboundedReceiver<Action>,
+        action_rx: &mut UnboundedReceiver<Action>,
         tui: &mut tui::Tui,
-        action_tx: &tokio::sync::mpsc::UnboundedSender<Action>,
+        action_tx: &UnboundedSender<Action>,
     ) -> Result<()> {
         while let Ok(action) = action_rx.try_recv() {
             if action != Action::Tick && action != Action::Render {
