@@ -7,6 +7,7 @@ use cli::CLI;
 use color_eyre::Result;
 
 use app_config::Config;
+use shell::AppLayout;
 use tui::{
     errors::initialize_panic_handler,
     logger::{initialize_logger, LoggerConfig},
@@ -29,7 +30,14 @@ async fn main() -> Result<()> {
 
     let config = Config::new(CONFIG_PATH)?;
 
-    let mut app = Runner::new(config, args.tick_rate, args.frame_rate)?;
+    let shell = AppLayout::new();
+
+    let mut app = Runner::new(
+        config,
+        args.tick_rate,
+        args.frame_rate,
+        vec![Box::new(shell)],
+    )?;
 
     app.run().await?;
     Ok(())

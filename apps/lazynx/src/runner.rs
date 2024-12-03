@@ -5,8 +5,6 @@ use app_config::Config;
 use common::{Action, Component, Event};
 use tui::{self};
 
-use shell::AppLayout;
-
 #[derive(Default)]
 pub struct Runner {
     pub config: Config,
@@ -18,10 +16,14 @@ pub struct Runner {
 }
 
 impl Runner {
-    pub fn new(config: Config, tick_rate: f64, frame_rate: f64) -> Result<Self> {
-        let shell = AppLayout::new();
+    pub fn new(
+        config: Config,
+        tick_rate: f64,
+        frame_rate: f64,
+        components: Vec<Box<dyn Component<Config>>>,
+    ) -> Result<Self> {
         Ok(Self {
-            components: vec![Box::new(shell)],
+            components,
             config,
             frame_rate,
             should_quit: false,
