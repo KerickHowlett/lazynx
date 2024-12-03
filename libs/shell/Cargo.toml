@@ -10,5 +10,6 @@ common = { path = "../shared/common" }
 status = { path = "../status" }
 
 # Third-Party Dependencies
+color-eyre = "0.6.3"
 crossterm = { version = "0.28.1", features = ["serde", "event-stream"] }
 ratatui = { version = "0.29.0", features = ["serde", "macros"] }

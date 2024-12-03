@@ -27,4 +27,9 @@ impl Component<Config> for SidebarComponent {
 
         self.status_tab.draw(frame, chunks[0]);
     }
+
+    fn init(&mut self) -> color_eyre::eyre::Result<()> {
+        self.status_tab.init()?;
+        Ok(())
+    }
 }

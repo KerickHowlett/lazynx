@@ -1,19 +1,23 @@
+use std::env;
+
 use ratatui::{prelude::*, widgets::*};
 
 use app_config::Config;
 use common::Component;
 
 #[derive(Default)]
-pub struct StatusTabComponent {}
+pub struct StatusTabComponent {
+    workspace_name: String,
+}
 
 impl StatusTabComponent {
     pub fn new() -> Self {
-        Self::default()
+        return Self::default();
     }
 
     fn create_block(&self) -> Block {
         return Block::default()
-            .title("[1]—Status")
+            .title(String::from("[1]—Status"))
             .borders(Borders::ALL)
             .title_alignment(Alignment::Left)
             .border_type(BorderType::Rounded)
@@ -25,11 +29,20 @@ impl Component<Config> for StatusTabComponent {
     fn draw(&mut self, frame: &mut Frame, area: Rect) {
         let block = self.create_block();
 
-        // TODO: Replace placeholder for dynamic means of acquiring Nx Workspace
-        //-      name from the appropriate config file.
-        let placeholder = Text::from("LazyNx Workspace");
-        let project_name = Paragraph::new(placeholder).left_aligned();
+        let workspace_name = Text::from(self.workspace_name.clone());
+        let paragraph = Paragraph::new(workspace_name).left_aligned().block(block);
 
-        frame.render_widget(project_name.block(block), area);
+        frame.render_widget(paragraph, area);
+    }
+
+    fn init(&mut self) -> color_eyre::eyre::Result<()> {
+        self.workspace_name = env::current_dir()
+            .unwrap()
+            .file_name()
+            .and_then(|name| name.to_str())
+            .map(|s| s.to_owned())
+            .unwrap_or_else(|| String::from("Unknown Workspace"));
+
+        Ok(())
     }
 }

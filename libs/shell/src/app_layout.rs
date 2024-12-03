@@ -41,4 +41,9 @@ impl Component<Config> for AppLayout {
         self.sidebar.draw(frame, chunks[0]);
         self.status.draw(frame, chunks[1]);
     }
+
+    fn init(&mut self) -> color_eyre::eyre::Result<()> {
+        self.sidebar.init()?;
+        Ok(())
+    }
 }
