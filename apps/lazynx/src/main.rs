@@ -30,14 +30,10 @@ async fn main() -> Result<()> {
 
     let config = Config::new(CONFIG_PATH)?;
 
-    let shell = AppLayout::new();
+    // let shell = AppLayout::new();
+    let app_shell = AppLayout::new();
 
-    let mut app = Runner::new(
-        config,
-        args.tick_rate,
-        args.frame_rate,
-        vec![Box::new(shell)],
-    )?;
+    let mut app = Runner::new(app_shell, config, args.tick_rate, args.frame_rate)?;
 
     app.run().await?;
     Ok(())
