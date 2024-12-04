@@ -911,6 +911,7 @@ dependencies = [
  "crossterm",
  "lazy_static",
  "log",
+ "pretty_assertions",
  "ratatui",
  "shell",
  "tokio",
