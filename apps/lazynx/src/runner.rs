@@ -9,10 +9,10 @@ use tui::{self};
 pub struct Runner<TApp: Component<Config>> {
     pub app: TApp,
     pub config: Config,
-    pub tick_rate: f64,
     pub frame_rate: f64,
     pub should_quit: bool,
     pub should_suspend: bool,
+    pub tick_rate: f64,
 }
 
 impl<TApp: Component<Config>> Runner<TApp> {
@@ -39,11 +39,12 @@ impl<TApp: Component<Config>> Runner<TApp> {
 
         self.app.register_action_handler(action_tx.clone())?;
         self.app.register_config_handler(self.config.clone())?;
+
         self.app.init()?;
 
         loop {
-            if let Some(e) = tui.next().await {
-                self.handle_event(e, &action_tx).await?;
+            if let Some(event) = tui.next().await {
+                self.handle_event(event, &action_tx).await?;
             }
 
             self.handle_action(&mut action_rx, &mut tui, &action_tx)
@@ -77,10 +78,7 @@ impl<TApp: Component<Config>> Runner<TApp> {
             }
 
             match action {
-                Action::Quit => {
-                    self.should_quit = true;
-                    println!("Bye!");
-                }
+                Action::Quit => self.should_quit = true,
                 Action::Suspend => self.should_suspend = true,
                 Action::Resume => self.should_suspend = false,
                 Action::Render => {
@@ -139,6 +137,8 @@ impl<TApp: Component<Config>> Runner<TApp> {
 
 #[cfg(test)]
 mod tests {
+    use std::{path, time::Duration};
+
     use super::Runner;
     use app_config::Config;
     use color_eyre::eyre::Result;
@@ -146,11 +146,17 @@ mod tests {
     use pretty_assertions::assert_eq;
     use ratatui::layout::Rect;
     use test_case::test_case;
-    use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
+    use tokio::{
+        sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
+        time::timeout,
+    };
 
     #[derive(Default)]
     struct MockApp {
+        config: Config,
+        init_called: bool,
         is_rendered: bool,
+        action_handler_tx: Option<UnboundedSender<Action>>,
         updated_with: Option<Action>,
     }
 
@@ -166,11 +172,28 @@ mod tests {
             }
         }
 
+        fn init(&mut self) -> Result<()> {
+            self.init_called = true;
+            Ok(())
+        }
+
+        fn register_action_handler(&mut self, tx: UnboundedSender<Action>) -> Result<()> {
+            self.action_handler_tx = Some(tx.clone());
+            Ok(())
+        }
+
+        fn register_config_handler(&mut self, config: Config) -> Result<()> {
+            self.config = config;
+            Ok(())
+        }
+
         fn update(&mut self, action: Action) -> Result<Option<Action>> {
             self.updated_with = Some(action);
             Ok(None)
         }
     }
+
+    const TMP_DIR: &str = "/tmp";
 
     fn setup() -> (
         Runner<MockApp>,
@@ -178,8 +201,10 @@ mod tests {
         UnboundedReceiver<Action>,
     ) {
         let mock_app = MockApp::default();
-        let mock_config = Config::default();
-        let runner = Runner::new(mock_app, mock_config, 0.0, 0.0).unwrap();
+        let mut mock_config = Config::default();
+        mock_config.config.data_dir = path::PathBuf::from(TMP_DIR);
+
+        let runner = Runner::new(mock_app, mock_config, 4.0, 60.0).unwrap();
 
         let (tx, rx) = unbounded_channel();
 
@@ -190,7 +215,7 @@ mod tests {
 
     #[test]
     fn test_runner_instantiation() {
-        let runner = Runner::new(MockApp::default(), Config::default(), 0.0, 0.0);
+        let runner = Runner::new(MockApp::default(), Config::default(), 4.0, 60.0);
         assert_eq!(
             runner.is_ok(),
             true,
@@ -293,6 +318,83 @@ mod tests {
         run_handle_action_test(Action::Render, &mut rx, &tx, &mut runner).await?;
 
         assert_eq!(runner.app.is_rendered, true);
+
+        Ok(())
+    }
+
+    // @SECTION: Runner.run Tests
+
+    #[tokio::test]
+    async fn test_run_call_app_init() -> Result<()> {
+        let (mut runner, _, _) = setup();
+
+        tokio::select! {
+            _ = runner.run() => {},
+            _ = tokio::time::sleep(tokio::time::Duration::from_secs(1)) => {
+            },
+        }
+
+        assert_eq!(runner.app.init_called, true);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_run_register_action_handler() -> Result<()> {
+        let (mut runner, _, _) = setup();
+
+        tokio::select! {
+            _ = runner.run() => {},
+            _ = tokio::time::sleep(tokio::time::Duration::from_secs(1)) => {
+            },
+        }
+
+        assert_eq!(runner.app.action_handler_tx.is_some(), true);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_run_register_config() -> Result<()> {
+        let (mut runner, _, _) = setup();
+
+        tokio::select! {
+            _ = runner.run() => {},
+            _ = tokio::time::sleep(tokio::time::Duration::from_secs(1)) => {
+            },
+        }
+
+        let actual_data_dir = runner.app.config.config.data_dir.to_str().unwrap();
+        assert_eq!(actual_data_dir, TMP_DIR);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_run_process_events() -> Result<()> {
+        let (mut runner, tx, mut rx) = setup();
+
+        tx.send(Action::Init)?;
+        tokio::select! {
+            _ = runner.run() => {
+                tx.send(Action::Resume)?
+            },
+            _ = tokio::time::sleep(tokio::time::Duration::from_secs(1)) => {},
+        }
+
+        assert_eq!(rx.recv().await, Some(Action::Init));
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_run_should_exit_tui_on_quit() -> Result<()> {
+        let (mut runner, _, _) = setup();
+        runner.should_quit = true;
+
+        if let Err(error) = timeout(Duration::from_secs(2), runner.run()).await {
+            panic!("Runner.run() failed to exit tui: {error:?}");
+        }
 
         Ok(())
     }
