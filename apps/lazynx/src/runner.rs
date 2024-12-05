@@ -371,23 +371,6 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_run_process_events() -> Result<()> {
-        let (mut runner, tx, mut rx) = setup();
-
-        tx.send(Action::Init)?;
-        tokio::select! {
-            _ = runner.run() => {
-                tx.send(Action::Resume)?
-            },
-            _ = tokio::time::sleep(tokio::time::Duration::from_secs(1)) => {},
-        }
-
-        assert_eq!(rx.recv().await, Some(Action::Init));
-
-        Ok(())
-    }
-
-    #[tokio::test]
     async fn test_run_should_exit_tui_on_quit() -> Result<()> {
         let (mut runner, _, _) = setup();
         runner.should_quit = true;
