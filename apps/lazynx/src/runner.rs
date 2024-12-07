@@ -1,78 +1,83 @@
 use color_eyre::eyre::Result;
-use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
+use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
 
 use app_config::Config;
 use common::{Action, Component, Event};
-use tui::{self};
+use tui::Tui;
 
-#[derive(Default)]
 pub struct Runner<TApp: Component<Config>> {
+    pub action_rx: UnboundedReceiver<Action>,
+    pub action_tx: UnboundedSender<Action>,
     pub app: TApp,
     pub config: Config,
     pub frame_rate: f64,
     pub should_quit: bool,
     pub should_suspend: bool,
     pub tick_rate: f64,
+    pub tui: Tui,
 }
 
 impl<TApp: Component<Config>> Runner<TApp> {
-    pub fn new(app: TApp, config: Config, tick_rate: f64, frame_rate: f64) -> Result<Self> {
+    pub fn new(
+        app: TApp,
+        config: Config,
+        tick_rate: f64,
+        frame_rate: f64,
+        action_tx: UnboundedSender<Action>,
+        action_rx: UnboundedReceiver<Action>,
+        tui: Tui,
+    ) -> Result<Self> {
+        let tui = tui
+            .set_tick_rate(tick_rate)
+            .set_frame_rate(frame_rate)
+            .set_mouse(true)
+            .set_paste(true);
+
         Ok(Self {
+            action_rx,
+            action_tx,
             app,
             config,
             frame_rate,
             should_quit: false,
             should_suspend: false,
             tick_rate,
+            tui,
         })
     }
 
     pub async fn run(&mut self) -> Result<()> {
-        let (action_tx, mut action_rx) = unbounded_channel();
+        self.tui.enter()?;
 
-        let mut tui = tui::Tui::new()?
-            .tick_rate(self.tick_rate)
-            .frame_rate(self.frame_rate)
-            .mouse(true)
-            .paste(true);
-        tui.enter()?;
-
-        self.app.register_action_handler(action_tx.clone())?;
+        self.app.register_action_handler(self.action_tx.clone())?;
         self.app.register_config_handler(self.config.clone())?;
-
         self.app.init()?;
 
         loop {
-            if let Some(event) = tui.next().await {
-                self.handle_event(event, &action_tx).await?;
+            if let Some(event) = self.tui.next().await {
+                self.handle_event(event).await?;
             }
 
-            self.handle_action(&mut action_rx, &mut tui, &action_tx)
-                .await?;
+            self.handle_action().await?;
 
             if self.should_suspend {
-                self.suspend_tui(&mut tui, &action_tx)?;
+                self.suspend_tui()?;
                 continue;
             }
 
             if self.should_quit {
-                tui.stop()?;
+                self.tui.stop()?;
                 break;
             }
         }
 
-        tui.exit()?;
+        self.tui.exit()?;
 
         Ok(())
     }
 
-    async fn handle_action(
-        &mut self,
-        action_rx: &mut UnboundedReceiver<Action>,
-        tui: &mut tui::Tui,
-        action_tx: &UnboundedSender<Action>,
-    ) -> Result<()> {
-        while let Ok(action) = action_rx.try_recv() {
+    async fn handle_action(&mut self) -> Result<()> {
+        while let Ok(action) = self.action_rx.try_recv() {
             if action != Action::Tick && action != Action::Render {
                 log::debug!("{action:?}");
             }
@@ -82,7 +87,7 @@ impl<TApp: Component<Config>> Runner<TApp> {
                 Action::Suspend => self.should_suspend = true,
                 Action::Resume => self.should_suspend = false,
                 Action::Render => {
-                    tui.draw(|f| {
+                    self.tui.draw(|f| {
                         self.app.draw(f, f.area());
                     })?;
                 }
@@ -90,27 +95,23 @@ impl<TApp: Component<Config>> Runner<TApp> {
             }
 
             if let Some(action) = self.app.update(action.clone())? {
-                action_tx.send(action)?
+                self.action_tx.send(action)?
             }
         }
 
         Ok(())
     }
 
-    async fn handle_event(
-        &mut self,
-        event: Event,
-        action_tx: &UnboundedSender<Action>,
-    ) -> Result<()> {
+    async fn handle_event(&mut self, event: Event) -> Result<()> {
         match event {
-            Event::Init => action_tx.send(Action::Init)?,
-            Event::Quit => action_tx.send(Action::Quit)?,
-            Event::Render => action_tx.send(Action::Render)?,
-            Event::Tick => action_tx.send(Action::Tick)?,
-            Event::Resize(x, y) => action_tx.send(Action::Resize { x, y })?,
+            Event::Init => self.action_tx.send(Action::Init)?,
+            Event::Quit => self.action_tx.send(Action::Quit)?,
+            Event::Render => self.action_tx.send(Action::Render)?,
+            Event::Tick => self.action_tx.send(Action::Tick)?,
+            Event::Resize(x, y) => self.action_tx.send(Action::Resize { x, y })?,
             other_event => {
                 if let Some(action) = self.app.handle_events(other_event.clone()) {
-                    action_tx.send(action)?
+                    self.action_tx.send(action)?
                 }
             }
         }
@@ -118,18 +119,17 @@ impl<TApp: Component<Config>> Runner<TApp> {
         Ok(())
     }
 
-    fn suspend_tui(
-        &mut self,
-        tui: &mut tui::Tui,
-        action_tx: &UnboundedSender<Action>,
-    ) -> Result<()> {
-        tui.suspend()?;
-        action_tx.send(Action::Resume)?;
+    fn suspend_tui(&mut self) -> Result<()> {
+        self.tui.suspend()?;
+        self.action_tx.send(Action::Resume)?;
 
-        *tui = tui::Tui::new()?
-            .tick_rate(self.tick_rate)
-            .frame_rate(self.frame_rate);
-        tui.enter()?;
+        self.tui = tui::Tui::new()?
+            .set_tick_rate(self.tick_rate)
+            .set_frame_rate(self.frame_rate)
+            .set_mouse(true)
+            .set_paste(true);
+
+        self.tui.enter()?;
 
         Ok(())
     }
@@ -137,6 +137,7 @@ impl<TApp: Component<Config>> Runner<TApp> {
 
 #[cfg(test)]
 mod tests {
+    use core::panic;
     use std::{path, time::Duration};
 
     use super::Runner;
@@ -147,7 +148,7 @@ mod tests {
     use ratatui::layout::Rect;
     use test_case::test_case;
     use tokio::{
-        sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
+        sync::mpsc::{unbounded_channel, UnboundedSender},
         time::timeout,
     };
 
@@ -195,27 +196,33 @@ mod tests {
 
     const TMP_DIR: &str = "/tmp";
 
-    fn setup() -> (
-        Runner<MockApp>,
-        UnboundedSender<Action>,
-        UnboundedReceiver<Action>,
-    ) {
+    fn setup() -> Runner<MockApp> {
         let mock_app = MockApp::default();
         let mut mock_config = Config::default();
         mock_config.config.data_dir = path::PathBuf::from(TMP_DIR);
 
-        let runner = Runner::new(mock_app, mock_config, 4.0, 60.0).unwrap();
+        let tui = tui::Tui::new().unwrap();
+        let (action_tx, action_rx) = unbounded_channel();
 
-        let (tx, rx) = unbounded_channel();
-
-        return (runner, tx, rx);
+        return Runner::new(mock_app, mock_config, 4.0, 60.0, action_tx, action_rx, tui).unwrap();
     }
 
     // @SECTION: Runner Instantiation Test
 
     #[test]
     fn test_runner_instantiation() {
-        let runner = Runner::new(MockApp::default(), Config::default(), 4.0, 60.0);
+        let (action_tx, action_rx) = unbounded_channel();
+
+        let runner = Runner::new(
+            MockApp::default(),
+            Config::default(),
+            4.0,
+            60.0,
+            action_tx,
+            action_rx,
+            tui::Tui::new().unwrap(),
+        );
+
         assert_eq!(
             runner.is_ok(),
             true,
@@ -234,11 +241,11 @@ mod tests {
     #[test_case(Event::Closed, Action::Quit; "Any Other Event (Established in MockComponent)")]
     #[tokio::test]
     async fn test_handle_event(event: Event, expected_action: Action) -> Result<()> {
-        let (mut runner, tx, mut rx) = setup();
+        let mut runner = setup();
 
-        runner.handle_event(event, &tx).await?;
+        runner.handle_event(event).await?;
 
-        let sent_action = rx.recv().await;
+        let sent_action = runner.action_rx.recv().await;
         assert_eq!(
             sent_action,
             Some(expected_action.clone()),
@@ -250,24 +257,13 @@ mod tests {
 
     // @SECTION: Runner.handle_action Tests
 
-    async fn run_handle_action_test(
-        action: Action,
-        rx: &mut UnboundedReceiver<Action>,
-        tx: &UnboundedSender<Action>,
-        runner: &mut Runner<MockApp>,
-    ) -> Result<()> {
-        tx.send(action)?;
-        runner.handle_action(rx, &mut tui::Tui::new()?, tx).await?;
-
-        Ok(())
-    }
-
     #[tokio::test]
     async fn test_handle_action_quit() -> Result<()> {
-        let (mut runner, tx, mut rx) = setup();
+        let mut runner = setup();
         runner.should_quit = false;
 
-        run_handle_action_test(Action::Quit, &mut rx, &tx, &mut runner).await?;
+        runner.action_tx.send(Action::Quit)?;
+        runner.handle_action().await?;
 
         assert_eq!(runner.should_quit, true);
 
@@ -276,10 +272,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_handle_action_suspend() -> Result<()> {
-        let (mut runner, tx, mut rx) = setup();
+        let mut runner = setup();
         runner.should_suspend = false;
 
-        run_handle_action_test(Action::Suspend, &mut rx, &tx, &mut runner).await?;
+        runner.action_tx.send(Action::Suspend)?;
+        runner.handle_action().await?;
 
         assert_eq!(runner.should_suspend, true);
 
@@ -288,10 +285,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_handle_action_resume() -> Result<()> {
-        let (mut runner, tx, mut rx) = setup();
+        let mut runner = setup();
         runner.should_suspend = true;
 
-        run_handle_action_test(Action::Resume, &mut rx, &tx, &mut runner).await?;
+        runner.action_tx.send(Action::Resume)?;
+        runner.handle_action().await?;
 
         assert_eq!(runner.should_suspend, false);
 
@@ -300,10 +298,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_handle_action_tick() -> Result<()> {
-        let (mut runner, tx, mut rx) = setup();
+        let mut runner = setup();
         runner.app.updated_with = None;
 
-        run_handle_action_test(Action::Tick, &mut rx, &tx, &mut runner).await?;
+        runner.action_tx.send(Action::Tick)?;
+        runner.handle_action().await?;
 
         assert_eq!(runner.app.updated_with.unwrap(), Action::Tick);
 
@@ -312,10 +311,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_handle_action_render() -> Result<()> {
-        let (mut runner, tx, mut rx) = setup();
+        let mut runner = setup();
         runner.app.is_rendered = false;
 
-        run_handle_action_test(Action::Render, &mut rx, &tx, &mut runner).await?;
+        runner.action_tx.send(Action::Render)?;
+        runner.handle_action().await?;
 
         assert_eq!(runner.app.is_rendered, true);
 
@@ -326,7 +326,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_run_call_app_init() -> Result<()> {
-        let (mut runner, _, _) = setup();
+        let mut runner = setup();
 
         tokio::select! {
             _ = runner.run() => {},
@@ -341,7 +341,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_run_register_action_handler() -> Result<()> {
-        let (mut runner, _, _) = setup();
+        let mut runner = setup();
 
         tokio::select! {
             _ = runner.run() => {},
@@ -356,7 +356,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_run_register_config() -> Result<()> {
-        let (mut runner, _, _) = setup();
+        let mut runner = setup();
 
         tokio::select! {
             _ = runner.run() => {},
@@ -372,7 +372,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_run_should_exit_tui_on_quit() -> Result<()> {
-        let (mut runner, _, _) = setup();
+        let mut runner = setup();
         runner.should_quit = true;
 
         if let Err(error) = timeout(Duration::from_secs(2), runner.run()).await {

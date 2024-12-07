@@ -30,11 +30,20 @@ async fn main() -> Result<()> {
 
     let config = Config::new(CONFIG_PATH)?;
 
-    // let shell = AppLayout::new();
     let app_shell = AppLayout::new();
-
-    let mut app = Runner::new(app_shell, config, args.tick_rate, args.frame_rate)?;
+    let tui = tui::Tui::new()?;
+    let (action_tx, action_rx) = tokio::sync::mpsc::unbounded_channel();
+    let mut app = Runner::new(
+        app_shell,
+        config,
+        args.tick_rate,
+        args.frame_rate,
+        action_tx,
+        action_rx,
+        tui,
+    )?;
 
     app.run().await?;
+
     Ok(())
 }
