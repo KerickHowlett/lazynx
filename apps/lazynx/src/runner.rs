@@ -137,13 +137,11 @@ impl<TApp: Component<Config>> Runner<TApp> {
 
 #[cfg(test)]
 mod tests {
-    use core::panic;
-    use std::{path, time::Duration};
-
     use super::Runner;
-    use app_config::Config;
+
+    use std::{panic, path, time::Duration};
+
     use color_eyre::eyre::Result;
-    use common::{Action, Component, Event};
     use pretty_assertions::assert_eq;
     use ratatui::layout::Rect;
     use test_case::test_case;
@@ -151,6 +149,9 @@ mod tests {
         sync::mpsc::{unbounded_channel, UnboundedSender},
         time::timeout,
     };
+
+    use app_config::Config;
+    use common::{Action, Component, Event};
 
     #[derive(Default)]
     struct MockApp {
@@ -245,10 +246,10 @@ mod tests {
 
         runner.handle_event(event).await?;
 
-        let sent_action = runner.action_rx.recv().await;
+        let sent_action = runner.action_rx.recv().await.unwrap();
         assert_eq!(
             sent_action,
-            Some(expected_action.clone()),
+            expected_action.clone(),
             "{expected_action:?} was not sent. ${sent_action:?} was received instead.",
         );
 

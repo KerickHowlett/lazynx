@@ -1,6 +1,7 @@
 mod cli;
 mod consts;
 mod runner;
+mod runner_action_publisher;
 
 use clap::Parser;
 use cli::CLI;
@@ -8,6 +9,7 @@ use color_eyre::Result;
 
 use app_config::Config;
 use shell::AppLayout;
+use tokio::sync::mpsc::unbounded_channel;
 use tui::{
     errors::initialize_panic_handler,
     logger::{initialize_logger, LoggerConfig},
@@ -32,7 +34,7 @@ async fn main() -> Result<()> {
 
     let app_shell = AppLayout::new();
     let tui = tui::Tui::new()?;
-    let (action_tx, action_rx) = tokio::sync::mpsc::unbounded_channel();
+    let (action_tx, action_rx) = unbounded_channel();
     let mut app = Runner::new(
         app_shell,
         config,

@@ -93,13 +93,11 @@ impl Tui {
                 let crossterm_event = reader.next().fuse();
 
                 tokio::select! {
-                  _ = cancellation_token.cancelled() => {
-                    break;
-                  }
+                  _ = cancellation_token.cancelled() => break,
                   maybe_event = crossterm_event => {
                     match maybe_event {
-                      Some(Ok(evt)) => {
-                        match evt {
+                      Some(Ok(event)) => {
+                        match event {
                           CrosstermEvent::Key(key) => {
                             if key.kind == KeyEventKind::Press {
                               event_tx.send(Event::Key(key)).unwrap();
