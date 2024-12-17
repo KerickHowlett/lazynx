@@ -1,0 +1,20 @@
+[package]
+name = "shared_events"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+better-panic = "0.3.0"
+color-eyre = "0.6.3"
+crossterm = { version = "0.28.1", features = ["event-stream"] }
+futures = "0.3.31"
+pretty_assertions = "1.4.1"
+serde = { version = "1.0.211", features = ["derive"] }
+serde_derive = "1.0.215"
+serde_json = "1.0.132"
+test-case = "3.3.1"
+tokio = { version = "1.40.0", features = ["full"] }
+tokio-stream = "0.1.17"
+tokio-util = "0.7.12"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

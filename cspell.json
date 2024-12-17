@@ -18,11 +18,12 @@
         "Datelike",
         "lazynx",
         "libc",
+        "oneshot",
         "pagedown",
         "pageup",
         "ratatui",
         "scopeguard",
         "SIGTSTP",
-        "VERGEN",
+        "VERGEN"
     ]
 }
