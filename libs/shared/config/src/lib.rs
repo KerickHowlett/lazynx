@@ -1,10 +1,5 @@
-mod conf_consts;
-
 mod config;
-pub use config::*;
+pub use config::Config;
 
-mod dir_utils;
-pub use dir_utils::*;
-
-pub mod keybindings;
-pub mod style;
+#[path = "./config_utils/config_utils.mod.rs"]
+mod config_utils;

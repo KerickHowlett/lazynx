@@ -1,79 +1,53 @@
-use crate::{keybindings::KeyBindings, style::Styles};
-use color_eyre::Result;
-use serde::Deserialize;
-use std::{default::Default, path::PathBuf};
-use tracing::error;
+use std::path::PathBuf;
 
-use common::AppMode;
+use serde::{Deserialize, Serialize};
+use serde_with::{serde_as, NoneAsEmptyString};
+use tracing::level_filters::LevelFilter;
 
-use crate::dir_utils::{get_config_dir, get_data_dir};
+use crate::config_utils::{default_config_dir, default_config_file, default_data_dir};
 
-#[derive(Clone, Debug, Deserialize, Default)]
-pub struct AppConfig {
-    #[serde(default)]
-    pub data_dir: PathBuf,
-    #[serde(default)]
-    pub config_dir: PathBuf,
-}
-
-#[derive(Clone, Debug, Default, Deserialize)]
+/// Application configuration.
+///
+/// This is the main configuration struct for the application.
+#[serde_as]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Config {
-    #[serde(default, flatten)]
-    pub config: AppConfig,
-    #[serde(default)]
-    pub keybindings: KeyBindings,
-    #[serde(default)]
-    pub styles: Styles<AppMode>,
+    /// The directory to use for storing application data (logs etc.).
+    pub data_dir: PathBuf,
+
+    /// The directory to use for storing application configuration (colors
+    /// etc.).
+    pub config_home: PathBuf,
+
+    /// The directory to use for storing application configuration (colors
+    /// etc.).
+    pub config_file: PathBuf,
+
+    /// The log level to use. Valid values are: error, warn, info, debug, trace,
+    /// off. The default is info.
+    #[serde_as(as = "NoneAsEmptyString")]
+    pub log_level: Option<LevelFilter>,
+
+    /// The frame rate to use for rendering the application's UI and animation.
+    pub frame_rate: f64,
+
+    /// Enable/Disable mouse support.
+    pub enable_mouse: bool,
+
+    /// Enable/Disable clipboard support.
+    pub enable_paste: bool,
 }
 
-impl Config {
-    pub fn new(default_config: &str) -> Result<Self, config::ConfigError> {
-        let default_config: Config = json5::from_str(default_config).unwrap();
-        let data_dir = get_data_dir();
-        let config_dir = get_config_dir();
-        let mut builder = config::Config::builder()
-            .set_default("data_dir", data_dir.to_str().unwrap())?
-            .set_default("config_dir", config_dir.to_str().unwrap())?;
-
-        let config_files = [
-            ("config.json5", config::FileFormat::Json5),
-            ("config.json", config::FileFormat::Json),
-            ("config.yaml", config::FileFormat::Yaml),
-            ("config.toml", config::FileFormat::Toml),
-            ("config.ini", config::FileFormat::Ini),
-        ];
-
-        let mut found_config = false;
-        for (file, format) in &config_files {
-            let source = config::File::from(config_dir.join(file))
-                .format(*format)
-                .required(false);
-            builder = builder.add_source(source);
-            if config_dir.join(file).exists() {
-                found_config = true
-            }
-        }
-
-        if !found_config {
-            error!("No configuration file found. Application may not behave as expected");
-        }
-
-        let mut config: Self = builder.build()?.try_deserialize()?;
-        for (mode, default_bindings) in default_config.keybindings.iter() {
-            let user_bindings = config.keybindings.entry(*mode).or_default();
-            for (key, cmd) in default_bindings.iter() {
-                user_bindings
-                    .entry(key.clone())
-                    .or_insert_with(|| cmd.clone());
-            }
-        }
-        for (mode, default_styles) in default_config.styles.iter() {
-            let user_styles = config.styles.entry(*mode).or_default();
-            for (style_key, style) in default_styles.iter() {
-                user_styles.entry(style_key.clone()).or_insert(*style);
-            }
-        }
-
-        Ok(config)
+impl Default for Config {
+    fn default() -> Self {
+        return Self {
+            config_file: default_config_file(),
+            config_home: default_config_dir(),
+            data_dir: default_data_dir(),
+            enable_mouse: false,
+            enable_paste: false,
+            frame_rate: 30.0,
+            log_level: None,
+        };
     }
 }
