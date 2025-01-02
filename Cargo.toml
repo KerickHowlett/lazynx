@@ -10,6 +10,7 @@ members = [
 	'libs/shell',
 	'libs/shared/events',
 	'libs/shared/logger',
+	'libs/shared/errors',
 ]
 
 [profile.release]

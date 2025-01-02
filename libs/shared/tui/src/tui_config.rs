@@ -8,13 +8,13 @@ use crossterm::{
 };
 use ratatui::{prelude::CrosstermBackend, Terminal};
 
-#[derive(Default)]
+#[derive(Clone, Copy, Default)]
 pub struct TuiConfig {
     pub enable_mouse: bool,
     pub enable_paste: bool,
 }
 
-#[derive(Default)]
+#[derive(Clone, Copy, Default)]
 pub struct Tui {
     config: TuiConfig,
 }
@@ -46,12 +46,12 @@ impl Tui {
         Ok(terminal)
     }
 
-    pub fn restore(config: TuiConfig) -> Result<()> {
-        if config.enable_paste {
+    pub fn restore(self) -> Result<()> {
+        if self.config.enable_paste {
             execute!(stdout(), DisableBracketedPaste)?;
         }
 
-        if config.enable_mouse {
+        if self.config.enable_mouse {
             execute!(stdout(), DisableMouseCapture)?;
         }
 
