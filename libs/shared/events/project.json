@@ -1,5 +1,5 @@
 {
-  "name": "shared_events",
+  "name": "events",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/shared/events/src",
@@ -10,7 +10,7 @@
         "{options.target-dir}"
       ],
       "options": {
-        "target-dir": "dist/target/shared_events"
+        "target-dir": "dist/target/events"
       }
     },
     "test": {
@@ -20,7 +20,7 @@
         "{options.target-dir}"
       ],
       "options": {
-        "target-dir": "dist/target/shared_events"
+        "target-dir": "dist/target/events"
       },
       "configurations": {
         "production": {
@@ -35,7 +35,7 @@
         "{options.target-dir}"
       ],
       "options": {
-        "target-dir": "dist/target/shared_events"
+        "target-dir": "dist/target/events"
       }
     }
   },

@@ -1,5 +1,5 @@
 {
-  "name": "shared_errors",
+  "name": "errors",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/shared/errors/src",
@@ -10,7 +10,7 @@
         "{options.target-dir}"
       ],
       "options": {
-        "target-dir": "dist/target/shared_errors"
+        "target-dir": "dist/target/errors"
       }
     },
     "test": {
@@ -20,7 +20,7 @@
         "{options.target-dir}"
       ],
       "options": {
-        "target-dir": "dist/target/shared_errors"
+        "target-dir": "dist/target/errors"
       },
       "configurations": {
         "production": {
@@ -35,7 +35,7 @@
         "{options.target-dir}"
       ],
       "options": {
-        "target-dir": "dist/target/shared_errors"
+        "target-dir": "dist/target/errors"
       }
     }
   },

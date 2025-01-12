@@ -1,50 +1,36 @@
-mod cli;
-mod consts;
-mod runner;
+mod app;
 
-use clap::Parser;
-use cli::CLI;
 use color_eyre::Result;
 
+use app::App;
 use app_config::Config;
-use shell::AppLayout;
-use tokio::sync::mpsc::unbounded_channel;
-use tui::{
-    errors::initialize_panic_handler,
-    logger::{initialize_logger, LoggerConfig},
-};
-
-use crate::{
-    consts::{CONFIG_PATH, PROJECT_NAME},
-    runner::Runner,
-};
+use crossterm::event::EventStream;
+use events::EventLoopHandler;
+use tui::Tui;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    initialize_panic_handler()?;
+    let config = Config::default();
 
-    let logger_config = LoggerConfig::new(PROJECT_NAME.clone());
-    initialize_logger(logger_config)?;
+    logger::init(logger::Config {
+        data_dir: config.data_dir.clone(),
+        log_level: config.log_level,
+    })?;
 
-    log::debug!("Starting in main...");
-    let args = CLI::parse();
+    let tui = Tui::default()
+        .set_mouse(config.enable_mouse)
+        .set_paste(config.enable_paste);
 
-    let config = Config::new(CONFIG_PATH)?;
+    errors::install_hooks(tui)?;
 
-    let app_shell = AppLayout::new();
-    let tui = tui::Tui::new()?;
-    let (action_tx, action_rx) = unbounded_channel();
-    let mut app = Runner::new(
-        app_shell,
-        config,
-        args.tick_rate,
-        args.frame_rate,
-        action_tx,
-        action_rx,
-        tui,
-    )?;
+    let backend = tui.init()?;
+    let frame_rate = config.frame_rate;
+    let event_loop = EventLoopHandler::new(EventStream::new(), frame_rate);
 
-    app.run().await?;
+    let mut app = App::new();
+    app.run(backend, config, event_loop)?;
+
+    tui.restore()?;
 
     Ok(())
 }

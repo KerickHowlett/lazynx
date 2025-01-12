@@ -1,4 +1,7 @@
-use std::fs::{create_dir_all, File};
+use std::{
+    fs::{create_dir_all, File},
+    path::PathBuf,
+};
 
 use color_eyre::eyre::Result;
 use tracing::level_filters::LevelFilter;
@@ -7,9 +10,19 @@ use tracing_subscriber::{
     self, filter::EnvFilter, prelude::__tracing_subscriber_SubscriberExt, util::SubscriberInitExt,
 };
 
-use crate::logger_config::LoggerConfig;
+/// Configuration for the logger.
+///
+/// The logger is configured using environment variables.
+pub struct Config {
+    /// The directory to use for storing application data (logs etc.).
+    pub data_dir: PathBuf,
 
-pub fn init(config: LoggerConfig) -> Result<()> {
+    /// The log level to use. Valid values are: error, warn, info, debug, trace,
+    /// off. The default is info.
+    pub log_level: Option<LevelFilter>,
+}
+
+pub fn init(config: Config) -> Result<()> {
     let directory = config.data_dir.clone();
     create_dir_all(directory.clone())?;
 

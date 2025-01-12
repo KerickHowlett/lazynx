@@ -9,6 +9,9 @@ authors = ["Kerick Howlett <8661181+KerickHowlett@users.noreply.github.com>"]
 # Local Dependencies
 app_config = { path = "../../libs/shared/config" }
 common = { path = "../../libs/shared/common" }
+errors = { path = "../../libs/shared/errors" }
+events = { path = "../../libs/shared/events" }
+logger = { path = "../../libs/shared/logger" }
 shell = { path = "../../libs/shell" }
 tui = { path = "../../libs/shared/tui" }
 

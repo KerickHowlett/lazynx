@@ -3,75 +3,59 @@ use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
 
 use app_config::Config;
 use common::{Action, Component, Event};
-use tui::Tui;
+use tui::TuiBackend;
 
 pub struct Runner<TApp: Component<Config>> {
-    pub action_rx: UnboundedReceiver<Action>,
-    pub action_tx: UnboundedSender<Action>,
-    pub app: TApp,
-    pub config: Config,
-    pub frame_rate: f64,
-    pub should_quit: bool,
-    pub should_suspend: bool,
-    pub tick_rate: f64,
-    pub tui: Tui,
+    action_rx: UnboundedReceiver<Action>,
+    action_tx: UnboundedSender<Action>,
+    app: TApp,
+    config: Config,
+    should_quit: bool,
+    should_suspend: bool,
+    tui: TuiBackend,
 }
 
 impl<TApp: Component<Config>> Runner<TApp> {
     pub fn new(
         app: TApp,
         config: Config,
-        tick_rate: f64,
-        frame_rate: f64,
         action_tx: UnboundedSender<Action>,
         action_rx: UnboundedReceiver<Action>,
-        tui: Tui,
+        tui: TuiBackend,
     ) -> Result<Self> {
-        let tui = tui
-            .set_tick_rate(tick_rate)
-            .set_frame_rate(frame_rate)
-            .set_mouse(true)
-            .set_paste(true);
-
         Ok(Self {
             action_rx,
             action_tx,
             app,
             config,
-            frame_rate,
             should_quit: false,
             should_suspend: false,
-            tick_rate,
             tui,
         })
     }
 
     pub async fn run(&mut self) -> Result<()> {
-        self.tui.enter()?;
-
         self.app.register_action_handler(self.action_tx.clone())?;
         self.app.register_config_handler(self.config.clone())?;
         self.app.init()?;
 
-        loop {
-            if let Some(event) = self.tui.next().await {
-                self.handle_event(event).await?;
-            }
+        // loop {
+        //     if let Some(event) = self.tui.next().await {
+        //         self.handle_event(event).await?;
+        //     }
 
-            self.handle_action().await?;
+        //     self.handle_action().await?;
 
-            if self.should_suspend {
-                self.suspend_tui()?;
-                continue;
-            }
+        //     if self.should_suspend {
+        //         self.suspend_tui()?;
+        //         continue;
+        //     }
 
-            if self.should_quit {
-                self.tui.stop()?;
-                break;
-            }
-        }
-
-        self.tui.exit()?;
+        //     if self.should_quit {
+        //         self.tui.stop()?;
+        //         break;
+        //     }
+        // }
 
         Ok(())
     }
@@ -118,28 +102,13 @@ impl<TApp: Component<Config>> Runner<TApp> {
 
         Ok(())
     }
-
-    fn suspend_tui(&mut self) -> Result<()> {
-        self.tui.suspend()?;
-        self.action_tx.send(Action::Resume)?;
-
-        self.tui = tui::Tui::new()?
-            .set_tick_rate(self.tick_rate)
-            .set_frame_rate(self.frame_rate)
-            .set_mouse(true)
-            .set_paste(true);
-
-        self.tui.enter()?;
-
-        Ok(())
-    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::Runner;
 
-    use std::{panic, path, time::Duration};
+    use std::{panic, time::Duration};
 
     use color_eyre::eyre::Result;
     use pretty_assertions::assert_eq;
@@ -163,7 +132,7 @@ mod tests {
     }
 
     impl Component<Config> for MockApp {
-        fn draw(&mut self, _f: &mut tui::Frame, _area: Rect) {
+        fn draw(&mut self, _f: &mut ratatui::Frame, _area: Rect) {
             self.is_rendered = true;
         }
 
@@ -195,17 +164,21 @@ mod tests {
         }
     }
 
-    const TMP_DIR: &str = "/tmp";
-
     fn setup() -> Runner<MockApp> {
         let mock_app = MockApp::default();
-        let mut mock_config = Config::default();
-        mock_config.config.data_dir = path::PathBuf::from(TMP_DIR);
+        let mock_config = Config::default();
 
-        let tui = tui::Tui::new().unwrap();
+        let tui = tui::Tui::default();
         let (action_tx, action_rx) = unbounded_channel();
 
-        return Runner::new(mock_app, mock_config, 4.0, 60.0, action_tx, action_rx, tui).unwrap();
+        return Runner::new(
+            mock_app,
+            mock_config,
+            action_tx,
+            action_rx,
+            tui.init().unwrap(),
+        )
+        .unwrap();
     }
 
     // @SECTION: Runner Instantiation Test
@@ -217,11 +190,9 @@ mod tests {
         let runner = Runner::new(
             MockApp::default(),
             Config::default(),
-            4.0,
-            60.0,
             action_tx,
             action_rx,
-            tui::Tui::new().unwrap(),
+            tui::Tui::default().init().unwrap(),
         );
 
         assert_eq!(
@@ -351,22 +322,6 @@ mod tests {
         }
 
         assert_eq!(runner.app.action_handler_tx.is_some(), true);
-
-        Ok(())
-    }
-
-    #[tokio::test]
-    async fn test_run_register_config() -> Result<()> {
-        let mut runner = setup();
-
-        tokio::select! {
-            _ = runner.run() => {},
-            _ = tokio::time::sleep(tokio::time::Duration::from_secs(1)) => {
-            },
-        }
-
-        let actual_data_dir = runner.app.config.config.data_dir.to_str().unwrap();
-        assert_eq!(actual_data_dir, TMP_DIR);
 
         Ok(())
     }

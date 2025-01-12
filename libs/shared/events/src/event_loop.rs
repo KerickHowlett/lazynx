@@ -39,7 +39,7 @@ impl<TEvents: Stream<Item = Result<CrosstermEvent, Error>> + Send + 'static> Eve
         let event = match event {
             Ok(CrosstermEvent::Key(key)) if key.kind == KeyEventKind::Release => None,
             Ok(event) => Some(Event::Crossterm(event)),
-            Err(_) => Some(Event::Error),
+            Err(_) => Some(Event::Error("Error reading terminal events".to_string())),
         };
 
         if let Some(event) = event {

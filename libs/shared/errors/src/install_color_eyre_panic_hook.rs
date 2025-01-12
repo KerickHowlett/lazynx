@@ -3,9 +3,9 @@ use std::panic;
 use color_eyre::config::PanicHook;
 use tracing::error;
 
-use tui::_Tui;
+use tui::Tui;
 
-pub fn install_color_eyre_panic_hook(tui: _Tui, panic_hook: PanicHook) {
+pub fn install_color_eyre_panic_hook(tui: Tui, panic_hook: PanicHook) {
     // convert from a `color_eyre::config::PanicHook`` to a `Box<dyn
     // Fn(&PanicInfo<'_>`
     let tui = tui.clone();
