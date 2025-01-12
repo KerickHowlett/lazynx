@@ -183,7 +183,8 @@ mod event_loop_tests {
 
     #[tokio::test(start_paused = true)]
     async fn test_event_loop_terminal_events_error() {
-        let error = Error::new(ErrorKind::Other, "error");
+        let error_message: String = String::from("error");
+        let error = Error::new(ErrorKind::Other, error_message.clone());
         let mut handler = setup(vec![Err(error)]);
 
         sleep(Duration::from_secs(1)).await;
@@ -203,7 +204,7 @@ mod event_loop_tests {
 
         assert_eq!(
             response,
-            Some(Event::Error),
+            Some(Event::Error(error_message)),
             "Received unexpected event: {response:?}"
         );
     }
