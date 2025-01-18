@@ -1,11 +1,14 @@
 use std::rc::Rc;
 
-use ratatui::{prelude::*, widgets::*};
+use ratatui::{
+    prelude::{Constraint, Direction, Frame, Layout, Line, Rect, Span},
+    widgets::{Block, BorderType, Borders, Padding, Paragraph},
+};
 
 #[derive(Default)]
-pub struct StatusView {}
+pub struct WorkspaceViewWidget;
 
-impl StatusView {
+impl WorkspaceViewWidget {
     fn create_block(&self) -> Block {
         return Block::default()
             .title(Line::from("Status").left_aligned())

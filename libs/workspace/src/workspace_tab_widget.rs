@@ -3,11 +3,11 @@ use std::env;
 use ratatui::{prelude::*, widgets::*};
 
 #[derive(Default)]
-pub struct StatusTabComponent {
+pub struct WorkspaceTabWidget {
     workspace_name: String,
 }
 
-impl StatusTabComponent {
+impl WorkspaceTabWidget {
     pub fn new() -> Self {
         return Self::default();
     }

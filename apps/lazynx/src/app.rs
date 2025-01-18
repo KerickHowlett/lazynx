@@ -6,10 +6,10 @@ use app_config::Config;
 use events::{Event, EventLoopHandler};
 use tui::Tui;
 
-use shell::AppLayout;
+use shell::AppWidget;
 
 pub struct App {
-    shell: AppLayout,
+    shell: AppWidget,
     should_quit: bool,
 }
 
@@ -18,7 +18,7 @@ const QUIT_KEY: KeyEvent = KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTR
 impl App {
     pub fn new() -> Self {
         return Self {
-            shell: AppLayout::new(),
+            shell: AppWidget::new(),
             should_quit: false,
         };
     }

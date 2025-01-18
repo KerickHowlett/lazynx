@@ -1,15 +1,15 @@
 use std::rc::Rc;
 
-use ratatui::prelude::*;
+use ratatui::prelude::{Constraint, Direction, Frame, Layout, Rect};
 
-use status::StatusTabComponent;
+use status::WorkspaceTabWidget;
 
 #[derive(Default)]
-pub struct SidebarComponent {
-    status_tab: StatusTabComponent,
+pub struct SidebarWidget {
+    status_tab: WorkspaceTabWidget,
 }
 
-impl SidebarComponent {
+impl SidebarWidget {
     pub fn draw(&mut self, frame: &mut Frame, area: Rect) {
         let chunks = self.create_layout(area);
 

@@ -1,17 +1,17 @@
 use ratatui::prelude::{Constraint, Direction, Layout};
 use ratatui::{layout::Rect, Frame};
 
-use status::StatusView;
+use status::WorkspaceViewWidget;
 
-use crate::sidebar_component::SidebarComponent;
+use crate::sidebar_widget::SidebarWidget;
 
 #[derive(Default)]
-pub struct AppLayout {
-    sidebar: SidebarComponent,
-    status: StatusView,
+pub struct AppWidget {
+    sidebar: SidebarWidget,
+    status: WorkspaceViewWidget,
 }
 
-impl AppLayout {
+impl AppWidget {
     pub fn new() -> Self {
         return Self::default();
     }

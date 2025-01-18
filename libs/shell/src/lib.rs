@@ -1,4 +1,4 @@
-mod sidebar_component;
+mod sidebar_widget;
 
-mod app_layout;
-pub use app_layout::*;
+mod app_widget;
+pub use app_widget::AppWidget;
