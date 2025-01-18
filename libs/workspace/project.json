@@ -11,7 +11,7 @@
         "{options.target-dir}"
       ],
       "options": {
-        "target-dir": "dist/target/status"
+        "target-dir": "dist/target/workspace"
       }
     },
     "test": {
@@ -21,7 +21,7 @@
         "{options.target-dir}"
       ],
       "options": {
-        "target-dir": "dist/target/status"
+        "target-dir": "dist/target/workspace"
       },
       "configurations": {
         "production": {
@@ -36,7 +36,7 @@
         "{options.target-dir}"
       ],
       "options": {
-        "target-dir": "dist/target/status"
+        "target-dir": "dist/target/workspace"
       }
     }
   }

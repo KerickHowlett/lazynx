@@ -1584,7 +1584,7 @@ dependencies = [
  "color-eyre",
  "crossterm",
  "ratatui",
- "status",
+ "workspace",
 ]
 
 [[package]]
@@ -1653,17 +1653,6 @@ name = "static_assertions"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
-
-[[package]]
-name = "status"
-version = "0.1.0"
-dependencies = [
- "app_config",
- "chrono",
- "color-eyre",
- "crossterm",
- "ratatui",
-]
 
 [[package]]
 name = "strip-ansi-escapes"
@@ -2381,6 +2370,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "36c1fec1a2bb5866f07c25f68c26e565c4c200aebb96d7e55710c19d3e8ac49b"
 dependencies = [
  "memchr",
+]
+
+[[package]]
+name = "workspace"
+version = "0.1.0"
+dependencies = [
+ "app_config",
+ "chrono",
+ "color-eyre",
+ "crossterm",
+ "ratatui",
 ]
 
 [[package]]

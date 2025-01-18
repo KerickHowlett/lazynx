@@ -34,9 +34,9 @@ impl WorkspaceTabWidget {
 
     fn create_block(&self) -> Block {
         return Block::default()
-            .title(String::from("[1]—Status"))
-            .borders(Borders::ALL)
+            .title("[1] Workspace")
             .title_alignment(Alignment::Left)
+            .borders(Borders::ALL)
             .border_type(BorderType::Rounded)
             .padding(Padding::left(3));
     }

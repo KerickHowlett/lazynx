@@ -7,7 +7,7 @@ edition = "2021"
 # Local Dependencies
 actions = { path = "../shared/actions" }
 app_config = { path = "../shared/config" }
-status = { path = "../status" }
+workspace = { path = "../workspace" }
 
 # Third-Party Dependencies
 color-eyre = "0.6.3"

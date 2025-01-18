@@ -1,14 +1,14 @@
 use ratatui::prelude::{Constraint, Direction, Layout};
 use ratatui::{layout::Rect, Frame};
 
-use status::WorkspaceViewWidget;
+use workspace::WorkspaceViewWidget;
 
 use crate::sidebar_widget::SidebarWidget;
 
 #[derive(Default)]
 pub struct AppWidget {
     sidebar: SidebarWidget,
-    status: WorkspaceViewWidget,
+    workspace: WorkspaceViewWidget,
 }
 
 impl AppWidget {
@@ -23,7 +23,7 @@ impl AppWidget {
             .split(frame.area());
 
         self.sidebar.draw(frame, chunks[0]);
-        self.status.draw(frame, chunks[1]);
+        self.workspace.draw(frame, chunks[1]);
     }
 
     pub fn init(&mut self) -> color_eyre::eyre::Result<()> {
