@@ -6,7 +6,6 @@ use app_config::Config;
 use events::{Event, EventLoopHandler};
 use tui::TuiBackend;
 
-use common::Component;
 use shell::AppLayout;
 
 pub struct App {

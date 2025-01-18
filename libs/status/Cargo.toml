@@ -6,7 +6,6 @@ edition = "2021"
 [dependencies]
 # Local Dependencies
 app_config = { path = "../../libs/shared/config" }
-common = { path = "../../libs/shared/common" }
 
 # Third-Party Dependencies
 chrono = "0.4.38"

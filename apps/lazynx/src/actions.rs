@@ -3,7 +3,7 @@ use tokio::sync::mpsc::{
     error::TryRecvError, unbounded_channel, UnboundedReceiver, UnboundedSender,
 };
 
-use common::Action;
+use action::Action;
 use events::Event;
 
 struct AppActions {

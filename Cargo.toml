@@ -11,6 +11,7 @@ members = [
 	'libs/shared/events',
 	'libs/shared/logger',
 	'libs/shared/errors',
+	'libs/shared/actions',
 ]
 
 [profile.release]

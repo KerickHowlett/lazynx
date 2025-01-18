@@ -5,8 +5,8 @@ edition = "2021"
 
 [dependencies]
 # Local Dependencies
+actions = { path = "../shared/actions" }
 app_config = { path = "../shared/config" }
-common = { path = "../shared/common" }
 status = { path = "../status" }
 
 # Third-Party Dependencies

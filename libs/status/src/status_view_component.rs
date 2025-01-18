@@ -2,9 +2,6 @@ use std::rc::Rc;
 
 use ratatui::{prelude::*, widgets::*};
 
-use app_config::Config;
-use common::Component;
-
 #[derive(Default)]
 pub struct StatusView {}
 
@@ -52,10 +49,8 @@ impl StatusView {
 
         return Paragraph::new(lazynx_title);
     }
-}
 
-impl Component<Config> for StatusView {
-    fn draw(&mut self, frame: &mut Frame, area: Rect) {
+    pub fn draw(&mut self, frame: &mut Frame, area: Rect) {
         let block = self.create_block();
         let chunks = self.create_layout(block.inner(area));
         frame.render_widget(block, area);

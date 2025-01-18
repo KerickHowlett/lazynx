@@ -3,6 +3,14 @@
 version = 4
 
 [[package]]
+name = "actions"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "strum",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -113,7 +121,6 @@ name = "app_config"
 version = "0.1.0"
 dependencies = [
  "color-eyre",
- "common",
  "config",
  "crossterm",
  "derive_deref",
@@ -345,6 +352,7 @@ checksum = "5b63caa9aa9397e2d9480a9b13673856c78d8ac123288526c37d7839f2a86990"
 name = "common"
 version = "0.1.0"
 dependencies = [
+ "actions",
  "color-eyre",
  "crossterm",
  "ratatui",
@@ -1008,11 +1016,11 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 name = "lazynx"
 version = "0.1.0"
 dependencies = [
+ "actions",
  "app_config",
  "chrono",
  "clap",
  "color-eyre",
- "common",
  "crossterm",
  "errors",
  "events",
@@ -1584,9 +1592,9 @@ dependencies = [
 name = "shell"
 version = "0.1.0"
 dependencies = [
+ "actions",
  "app_config",
  "color-eyre",
- "common",
  "crossterm",
  "ratatui",
  "status",
@@ -1666,7 +1674,6 @@ dependencies = [
  "app_config",
  "chrono",
  "color-eyre",
- "common",
  "crossterm",
  "ratatui",
 ]
@@ -2020,7 +2027,6 @@ version = "0.1.0"
 dependencies = [
  "better-panic",
  "color-eyre",
- "common",
  "crossterm",
  "futures",
  "libc",

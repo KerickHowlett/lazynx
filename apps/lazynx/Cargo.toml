@@ -7,8 +7,8 @@ authors = ["Kerick Howlett <8661181+KerickHowlett@users.noreply.github.com>"]
 
 [dependencies]
 # Local Dependencies
+actions = { path = '../../libs/shared/actions' }
 app_config = { path = "../../libs/shared/config" }
-common = { path = "../../libs/shared/common" }
 errors = { path = "../../libs/shared/errors" }
 events = { path = "../../libs/shared/events" }
 logger = { path = "../../libs/shared/logger" }
