@@ -6,7 +6,7 @@ use app::App;
 use app_config::Config;
 use crossterm::event::EventStream;
 use events::EventLoopHandler;
-use tui::Tui;
+use tui::TuiRunner;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -17,7 +17,7 @@ async fn main() -> Result<()> {
         log_level: config.log_level,
     })?;
 
-    let tui = Tui::default()
+    let tui = TuiRunner::default()
         .set_mouse(config.enable_mouse)
         .set_paste(config.enable_paste);
 

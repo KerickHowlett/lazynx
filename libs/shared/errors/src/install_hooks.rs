@@ -1,10 +1,10 @@
 use cfg_if::cfg_if;
 use color_eyre::{config::HookBuilder, eyre::Result};
-use tui::Tui;
+use tui::TuiRunner;
 
 use crate::{install_color_eyre_panic_hook, install_eyre_hook};
 
-pub fn install_hooks(tui: Tui) -> Result<()> {
+pub fn install_hooks(tui: TuiRunner) -> Result<()> {
     let (panic_hook, eyre_hook) = HookBuilder::default()
         .panic_section(format!(
             "This is a bug. Consider reporting it at {}",

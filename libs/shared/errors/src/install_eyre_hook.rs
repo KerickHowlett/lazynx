@@ -1,7 +1,7 @@
 use color_eyre::{config::EyreHook, eyre};
-use tui::Tui;
+use tui::TuiRunner;
 
-pub fn install_eyre_hook(tui: Tui, eyre_hook: EyreHook) -> color_eyre::Result<()> {
+pub fn install_eyre_hook(tui: TuiRunner, eyre_hook: EyreHook) -> color_eyre::Result<()> {
     let tui = tui.clone();
     let eyre_hook = eyre_hook.into_eyre_hook();
     eyre::set_hook(Box::new(move |error| {

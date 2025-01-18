@@ -9,14 +9,14 @@ use crossterm::{
 use ratatui::{prelude::CrosstermBackend, Terminal};
 
 #[derive(Clone, Copy, Default)]
-pub struct Tui {
+pub struct TuiRunner {
     enable_mouse: bool,
     enable_paste: bool,
 }
 
-pub type TuiBackend = Terminal<CrosstermBackend<Stdout>>;
+pub type Tui = Terminal<CrosstermBackend<Stdout>>;
 
-impl Tui {
+impl TuiRunner {
     pub fn set_mouse(&mut self, enable_mouse: bool) -> Self {
         self.enable_mouse = enable_mouse;
         return *self;
@@ -27,7 +27,7 @@ impl Tui {
         return *self;
     }
 
-    pub fn init(self) -> Result<TuiBackend> {
+    pub fn init(self) -> Result<Tui> {
         enable_raw_mode()?;
         execute!(stdout(), EnterAlternateScreen)?;
 

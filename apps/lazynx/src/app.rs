@@ -4,7 +4,7 @@ use tokio::sync::mpsc::error::TryRecvError;
 
 use app_config::Config;
 use events::{Event, EventLoopHandler};
-use tui::TuiBackend;
+use tui::Tui;
 
 use shell::AppLayout;
 
@@ -25,7 +25,7 @@ impl App {
 
     pub fn run(
         &mut self,
-        mut tui: TuiBackend,
+        mut tui: Tui,
         _config: Config,
         mut event_loop: EventLoopHandler,
     ) -> Result<()> {
@@ -53,7 +53,7 @@ impl App {
         Ok(())
     }
 
-    fn draw(&mut self, tui: &mut TuiBackend) -> Result<()> {
+    fn draw(&mut self, tui: &mut Tui) -> Result<()> {
         tui.draw(|frame| {
             self.shell.draw(frame, frame.area());
         })?;

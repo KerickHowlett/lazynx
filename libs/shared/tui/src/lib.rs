@@ -1,2 +1,2 @@
 mod tui;
-pub use tui::{Tui, TuiBackend};
+pub use tui::{Tui, TuiRunner};
