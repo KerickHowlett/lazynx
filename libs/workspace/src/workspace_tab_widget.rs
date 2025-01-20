@@ -13,7 +13,7 @@ impl WorkspaceTabWidget {
     }
 
     pub fn draw(&mut self, frame: &mut Frame, area: Rect) {
-        let block = self.create_block();
+        let block = self.create_tab();
 
         let workspace_name = Text::from(self.workspace_name.clone());
         let paragraph = Paragraph::new(workspace_name).left_aligned().block(block);
@@ -32,9 +32,9 @@ impl WorkspaceTabWidget {
         Ok(())
     }
 
-    fn create_block(&self) -> Block {
+    fn create_tab(&self) -> Block {
         return Block::default()
-            .title("[1] Workspace")
+            .title("─[1]─Workspace─")
             .title_alignment(Alignment::Left)
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded)
