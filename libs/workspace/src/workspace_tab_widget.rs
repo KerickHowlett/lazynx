@@ -8,10 +8,6 @@ pub struct WorkspaceTabWidget {
 }
 
 impl WorkspaceTabWidget {
-    pub fn new() -> Self {
-        return Self::default();
-    }
-
     pub fn draw(&mut self, frame: &mut Frame, area: Rect) {
         let block = self.create_tab();
 
