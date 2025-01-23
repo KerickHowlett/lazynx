@@ -66,7 +66,9 @@ impl TuiRunner {
         }
 
         execute!(stdout(), LeaveAlternateScreen)?;
-        disable_raw_mode()?;
+        if self.enable_draw {
+            disable_raw_mode()?;
+        }
 
         Ok(())
     }
