@@ -9,6 +9,7 @@ use app_config::Config;
 use events::{Event, EventLoopHandler};
 use tui::Tui;
 
+// Key events to quit TUI app.
 const QUIT_KEY_C: KeyEvent = KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTROL);
 const QUIT_KEY_D: KeyEvent = KeyEvent::new(KeyCode::Char('d'), KeyModifiers::CONTROL);
 
