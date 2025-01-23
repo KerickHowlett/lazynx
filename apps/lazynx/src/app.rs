@@ -1,24 +1,25 @@
+use std::result;
+
 use color_eyre::eyre::Result;
 use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyModifiers};
+use shell::IAppWidget;
 use tokio::sync::mpsc::error::TryRecvError;
 
 use app_config::Config;
 use events::{Event, EventLoopHandler};
 use tui::Tui;
 
-use shell::AppWidget;
+const QUIT_KEY: KeyEvent = KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTROL);
 
-pub struct App {
-    shell: AppWidget,
+pub struct App<TShell: IAppWidget> {
+    shell: TShell,
     should_quit: bool,
 }
 
-const QUIT_KEY: KeyEvent = KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTROL);
-
-impl App {
-    pub fn new() -> Self {
+impl<TShell: IAppWidget> App<TShell> {
+    pub fn new(shell: TShell) -> Self {
         return Self {
-            shell: AppWidget::new(),
+            shell,
             should_quit: false,
         };
     }
@@ -32,24 +33,14 @@ impl App {
         self.shell.init()?;
 
         loop {
-            match event_loop.next() {
-                Ok(Event::Render) => self.draw(&mut tui)?,
-                Ok(Event::Quit) => self.should_quit = true,
-                Ok(Event::Crossterm(CrosstermEvent::Key(key))) => {
-                    if key == QUIT_KEY {
-                        self.should_quit = true;
-                    }
-                }
-                Err(TryRecvError::Disconnected) => self.should_quit = true,
-
-                Err(TryRecvError::Empty) => {}
-                _ => {}
-            }
+            let event = event_loop.next();
+            self.event_handler(event, &mut tui)?;
 
             if self.should_quit {
                 break;
             }
         }
+
         Ok(())
     }
 
@@ -57,6 +48,131 @@ impl App {
         tui.draw(|frame| {
             self.shell.draw(frame, frame.area());
         })?;
+
+        Ok(())
+    }
+
+    fn event_handler(
+        &mut self,
+        event: result::Result<Event, TryRecvError>,
+        tui: &mut Tui,
+    ) -> Result<()> {
+        match event {
+            Ok(Event::Render) => self.draw(tui)?,
+            Ok(Event::Quit) => self.should_quit = true,
+            Ok(Event::Crossterm(CrosstermEvent::Key(key))) => {
+                if key == QUIT_KEY {
+                    self.should_quit = true;
+                }
+            }
+            Err(TryRecvError::Empty) => {}
+            Err(_) => self.should_quit = true,
+            _ => {}
+        }
+
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod app_tests {
+    use super::{App, QUIT_KEY};
+
+    use std::result;
+
+    use app_config::Config;
+    use color_eyre::eyre::Result;
+    use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyModifiers};
+    use pretty_assertions::assert_eq;
+    use ratatui::{layout::Rect, Frame};
+    use test_case::test_case;
+    use tokio::sync::mpsc::error::TryRecvError;
+
+    use events::{Event, EventLoopHandler};
+    use shell::IAppWidget;
+    use tui::{Tui, TuiRunner};
+
+    #[derive(Default)]
+    struct TestShell {
+        ran_init: bool,
+        is_drawn: bool,
+    }
+
+    impl IAppWidget for TestShell {
+        fn init(&mut self) -> Result<()> {
+            self.ran_init = true;
+            Ok(())
+        }
+
+        fn draw(&mut self, _frame: &mut Frame, _area: Rect) {
+            self.is_drawn = true;
+        }
+    }
+
+    fn setup() -> Result<(App<TestShell>, Tui, EventLoopHandler)> {
+        let mut shell = TestShell::default();
+        shell.is_drawn = false;
+        shell.ran_init = false;
+
+        let mut app = App::new(shell);
+        app.should_quit = false;
+
+        let mut tui = TuiRunner::default();
+        tui.set_draw(false);
+        let backend = tui.init()?;
+
+        const FPS: f64 = 30.0;
+        let event_loop = EventLoopHandler::new(tokio_stream::empty(), FPS);
+
+        return Ok((app, backend, event_loop));
+    }
+
+    const OTHER_KEY: KeyEvent = KeyEvent::new(KeyCode::Char('a'), KeyModifiers::empty());
+
+    #[test_case(Err(TryRecvError::Disconnected), true, "App should have terminated."; "Disconnected")]
+    #[test_case(Ok(Event::Crossterm(CrosstermEvent::Key(QUIT_KEY))), true, "App should have terminated."; "Ctrl + C")]
+    #[test_case(Ok(Event::Crossterm(CrosstermEvent::Key(OTHER_KEY))), false, "App should not have terminated."; "Any Other Key Should Not Quit")]
+    #[tokio::test]
+    async fn test_should_quit_events(
+        event: result::Result<Event, TryRecvError>,
+        expected: bool,
+        failure_message: &str,
+    ) -> Result<()> {
+        let (mut app, mut backend, _) = setup()?;
+
+        app.event_handler(event, &mut backend)?;
+
+        assert_eq!(app.should_quit, expected, "{}", failure_message);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_render_event_handler() -> Result<()> {
+        let (mut app, mut backend, _) = setup()?;
+
+        app.event_handler(Ok(Event::Render), &mut backend)?;
+
+        assert_eq!(
+            app.shell.is_drawn, true,
+            "App should have rendered view in terminal."
+        );
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_run_shell_init() -> Result<()> {
+        let (mut app, backend, event_loop) = setup()?;
+        app.should_quit = true;
+
+        app.run(backend, Config::default(), event_loop)?;
+
+        assert_eq!(
+            app.shell.ran_init, true,
+            "App should have called shell's init() method."
+        );
+
         Ok(())
     }
 }

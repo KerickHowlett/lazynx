@@ -10,7 +10,6 @@ crossterm = { version = "0.28.1", features = ["serde", "event-stream"] }
 derive_deref = "1.1.1"
 directories = "5.0.1"
 json5 = "0.4.1"
-lazy_static = "1.5.0"
 pretty_assertions = "1.4.1"
 ratatui = { version = "0.29.0", features = ["serde", "macros"] }
 serde = { version = "1.0.211", features = ["derive"] }

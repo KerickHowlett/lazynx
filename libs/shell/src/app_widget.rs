@@ -1,9 +1,18 @@
-use ratatui::prelude::{Constraint, Direction, Layout};
-use ratatui::{layout::Rect, Frame};
+use ratatui::{
+    layout::Rect,
+    prelude::{Constraint, Direction, Layout},
+    Frame,
+};
 
+use color_eyre::eyre::Result;
 use workspace::WorkspaceViewWidget;
 
 use crate::sidebar_widget::SidebarWidget;
+
+pub trait IAppWidget {
+    fn draw(&mut self, frame: &mut Frame, area: Rect);
+    fn init(&mut self) -> Result<()>;
+}
 
 #[derive(Default)]
 pub struct AppWidget {
@@ -15,8 +24,10 @@ impl AppWidget {
     pub fn new() -> Self {
         return Self::default();
     }
+}
 
-    pub fn draw(&mut self, frame: &mut Frame, _area: Rect) {
+impl IAppWidget for AppWidget {
+    fn draw(&mut self, frame: &mut Frame, _area: Rect) {
         let chunks = Layout::default()
             .direction(Direction::Horizontal)
             .constraints(vec![Constraint::Min(38), Constraint::Percentage(75)])
@@ -26,7 +37,7 @@ impl AppWidget {
         self.workspace.draw(frame, chunks[1]);
     }
 
-    pub fn init(&mut self) -> color_eyre::eyre::Result<()> {
+    fn init(&mut self) -> color_eyre::eyre::Result<()> {
         self.sidebar.init()?;
         Ok(())
     }

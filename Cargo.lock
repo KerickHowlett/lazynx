@@ -126,7 +126,6 @@ dependencies = [
  "derive_deref",
  "directories",
  "json5",
- "lazy_static",
  "pretty_assertions",
  "ratatui",
  "serde",
@@ -653,7 +652,6 @@ dependencies = [
 name = "events"
 version = "0.1.0"
 dependencies = [
- "better-panic",
  "color-eyre",
  "crossterm",
  "futures",
@@ -1005,13 +1003,11 @@ version = "0.1.0"
 dependencies = [
  "actions",
  "app_config",
- "chrono",
  "clap",
  "color-eyre",
  "crossterm",
  "errors",
  "events",
- "lazy_static",
  "log",
  "logger",
  "pretty_assertions",
@@ -1019,6 +1015,8 @@ dependencies = [
  "shell",
  "test-case",
  "tokio",
+ "tokio-stream",
+ "tokio-util",
  "tui",
 ]
 
@@ -2001,7 +1999,6 @@ dependencies = [
 name = "tui"
 version = "0.1.0"
 dependencies = [
- "better-panic",
  "color-eyre",
  "crossterm",
  "futures",

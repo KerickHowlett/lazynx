@@ -10,6 +10,7 @@ use ratatui::{prelude::CrosstermBackend, Terminal};
 
 #[derive(Clone, Copy, Default)]
 pub struct TuiRunner {
+    enable_draw: bool,
     enable_mouse: bool,
     enable_paste: bool,
 }
@@ -17,6 +18,11 @@ pub struct TuiRunner {
 pub type Tui = Terminal<CrosstermBackend<Stdout>>;
 
 impl TuiRunner {
+    pub fn set_draw(&mut self, enable_draw: bool) -> Self {
+        self.enable_draw = enable_draw;
+        return *self;
+    }
+
     pub fn set_mouse(&mut self, enable_mouse: bool) -> Self {
         self.enable_mouse = enable_mouse;
         return *self;
@@ -28,7 +34,10 @@ impl TuiRunner {
     }
 
     pub fn init(self) -> Result<Tui> {
-        enable_raw_mode()?;
+        if self.enable_draw {
+            enable_raw_mode()?;
+        }
+
         execute!(stdout(), EnterAlternateScreen)?;
 
         if self.enable_mouse {
