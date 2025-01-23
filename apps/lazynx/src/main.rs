@@ -28,11 +28,11 @@ async fn main() -> Result<()> {
     let frame_rate = config.frame_rate;
     let event_loop = EventLoopHandler::new(EventStream::new(), frame_rate);
 
-    let shell = AppWidget::new();
-    let mut app = App::new(shell);
-
+    let mut app = App::<AppWidget>::default();
     let backend = tui.init()?;
+
     app.run(backend, config, event_loop)?;
+
     tui.restore()?;
 
     Ok(())

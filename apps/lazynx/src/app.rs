@@ -13,19 +13,13 @@ use tui::Tui;
 const QUIT_KEY_C: KeyEvent = KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTROL);
 const QUIT_KEY_D: KeyEvent = KeyEvent::new(KeyCode::Char('d'), KeyModifiers::CONTROL);
 
+#[derive(Default)]
 pub struct App<TShell: IAppWidget> {
     shell: TShell,
     should_quit: bool,
 }
 
 impl<TShell: IAppWidget> App<TShell> {
-    pub fn new(shell: TShell) -> Self {
-        return Self {
-            shell,
-            should_quit: false,
-        };
-    }
-
     pub fn run(
         &mut self,
         mut tui: Tui,
@@ -114,12 +108,10 @@ mod app_tests {
     }
 
     fn setup() -> Result<(App<TestShell>, Tui, EventLoopHandler)> {
-        let mut shell = TestShell::default();
-        shell.is_drawn = false;
-        shell.ran_init = false;
-
-        let mut app = App::new(shell);
+        let mut app = App::<TestShell>::default();
         app.should_quit = false;
+        app.shell.is_drawn = false;
+        app.shell.ran_init = false;
 
         let mut tui = TuiRunner::default();
         tui.set_draw(false);
