@@ -9,7 +9,8 @@ use app_config::Config;
 use events::{Event, EventLoopHandler};
 use tui::Tui;
 
-const QUIT_KEY: KeyEvent = KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTROL);
+const QUIT_KEY_C: KeyEvent = KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTROL);
+const QUIT_KEY_D: KeyEvent = KeyEvent::new(KeyCode::Char('d'), KeyModifiers::CONTROL);
 
 pub struct App<TShell: IAppWidget> {
     shell: TShell,
@@ -61,7 +62,7 @@ impl<TShell: IAppWidget> App<TShell> {
             Ok(Event::Render) => self.draw(tui)?,
             Ok(Event::Quit) => self.should_quit = true,
             Ok(Event::Crossterm(CrosstermEvent::Key(key))) => {
-                if key == QUIT_KEY {
+                if key == QUIT_KEY_C || key == QUIT_KEY_D {
                     self.should_quit = true;
                 }
             }
@@ -76,7 +77,9 @@ impl<TShell: IAppWidget> App<TShell> {
 
 #[cfg(test)]
 mod app_tests {
-    use super::{App, QUIT_KEY};
+    use crate::app::QUIT_KEY_D;
+
+    use super::{App, QUIT_KEY_C};
 
     use std::result;
 
@@ -130,7 +133,8 @@ mod app_tests {
     const OTHER_KEY: KeyEvent = KeyEvent::new(KeyCode::Char('a'), KeyModifiers::empty());
 
     #[test_case(Err(TryRecvError::Disconnected), true, "App should have terminated."; "Disconnected")]
-    #[test_case(Ok(Event::Crossterm(CrosstermEvent::Key(QUIT_KEY))), true, "App should have terminated."; "Ctrl + C")]
+    #[test_case(Ok(Event::Crossterm(CrosstermEvent::Key(QUIT_KEY_C))), true, "App should have terminated."; "Ctrl + C")]
+    #[test_case(Ok(Event::Crossterm(CrosstermEvent::Key(QUIT_KEY_D))), true, "App should have terminated."; "Ctrl + D")]
     #[test_case(Ok(Event::Crossterm(CrosstermEvent::Key(OTHER_KEY))), false, "App should not have terminated."; "Any Other Key Should Not Quit")]
     #[tokio::test]
     async fn test_should_quit_events(
