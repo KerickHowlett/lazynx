@@ -16,6 +16,7 @@
         "consts",
         "crossterm",
         "Datelike",
+        "insta",
         "lazynx",
         "libc",
         "oneshot",

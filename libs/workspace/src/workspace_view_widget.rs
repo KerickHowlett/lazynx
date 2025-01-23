@@ -65,3 +65,23 @@ impl WorkspaceViewWidget {
         frame.render_widget(copyright, chunks[1]);
     }
 }
+
+#[cfg(test)]
+mod workspace_widget_tests {
+    use super::WorkspaceViewWidget;
+
+    use insta::assert_snapshot;
+    use ratatui::{backend::TestBackend, Terminal};
+
+    #[test]
+    fn test_workspace_view_widget() {
+        let mut widget = WorkspaceViewWidget::default();
+
+        let backend = TestBackend::new(62, 50);
+        let mut terminal = Terminal::new(backend).unwrap();
+
+        terminal.draw(|f| widget.draw(f, f.area())).unwrap();
+
+        assert_snapshot!(terminal.backend());
+    }
+}
