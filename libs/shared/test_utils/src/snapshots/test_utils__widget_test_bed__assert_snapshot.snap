@@ -1,6 +1,5 @@
 ---
 source: libs/shared/test_utils/src/widget_test_bed.rs
-assertion_line: 34
 expression: self.terminal.backend()
 ---
 "╭Workspace───────────────────────────────────────────────────╮"

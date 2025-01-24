@@ -1,11 +1,12 @@
 use std::rc::Rc;
 
 use ratatui::{
-    prelude::{Constraint, Direction, Frame, Layout, Line, Rect, Span},
-    widgets::{Block, BorderType, Borders, Padding, Paragraph},
+    buffer::Buffer,
+    prelude::{Constraint, Direction, Layout, Line, Rect, Span},
+    widgets::{Block, BorderType, Borders, Padding, Paragraph, Widget},
 };
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct WorkspaceViewWidget;
 
 impl WorkspaceViewWidget {
@@ -52,17 +53,19 @@ impl WorkspaceViewWidget {
 
         return Paragraph::new(lazynx_title);
     }
+}
 
-    pub fn draw(&mut self, frame: &mut Frame, area: Rect) {
+impl Widget for WorkspaceViewWidget {
+    fn render(self, area: Rect, buf: &mut Buffer) {
         let block = self.create_block();
         let chunks = self.create_layout(block.inner(area));
-        frame.render_widget(block, area);
+        block.render(area, buf);
 
         let header = self.get_header();
-        frame.render_widget(header, chunks[0]);
+        header.render(chunks[0], buf);
 
         let copyright = self.get_copyright();
-        frame.render_widget(copyright, chunks[1]);
+        copyright.render(chunks[1], buf);
     }
 }
 
@@ -79,7 +82,7 @@ mod workspace_widget_tests {
 
         test_bed
             .terminal
-            .draw(|f| test_bed.widget.draw(f, f.area()))
+            .draw(|f| f.render_widget(test_bed.widget, f.area()))
             .unwrap();
 
         assert_snapshot!(test_bed.terminal.backend());

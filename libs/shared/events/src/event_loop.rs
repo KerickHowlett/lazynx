@@ -18,6 +18,8 @@ struct EventLoop<TEvents: Stream<Item = Result<CrosstermEvent, Error>> + Send + 
     tx: UnboundedSender<Event>,
 }
 
+const ERROR_MESSAGE: &str = "Error reading terminal events";
+
 impl<TEvents: Stream<Item = Result<CrosstermEvent, Error>> + Send + 'static> EventLoop<TEvents> {
     fn new(
         frame_rate: f64,
@@ -39,7 +41,7 @@ impl<TEvents: Stream<Item = Result<CrosstermEvent, Error>> + Send + 'static> Eve
         let event = match event {
             Ok(CrosstermEvent::Key(key)) if key.kind == KeyEventKind::Release => None,
             Ok(event) => Some(Event::Crossterm(event)),
-            Err(_) => Some(Event::Error("Error reading terminal events".to_string())),
+            Err(_) => Some(Event::Error(ERROR_MESSAGE.to_string())),
         };
 
         if let Some(event) = event {
@@ -99,7 +101,7 @@ impl EventLoopHandler {
 
 #[cfg(test)]
 mod event_loop_tests {
-    use super::EventLoopHandler;
+    use super::{EventLoopHandler, ERROR_MESSAGE};
 
     use std::io::{Error, ErrorKind};
 
@@ -107,7 +109,10 @@ mod event_loop_tests {
         Event as CrosstermEvent, KeyCode, KeyEvent, KeyEventKind, KeyEventState, KeyModifiers,
     };
     use pretty_assertions::assert_eq;
-    use tokio::time::{sleep, Duration};
+    use tokio::{
+        sync::mpsc::error::TryRecvError,
+        time::{sleep, Duration},
+    };
     use tokio_stream as stream;
 
     use crate::event::Event;
@@ -183,8 +188,7 @@ mod event_loop_tests {
 
     #[tokio::test(start_paused = true)]
     async fn test_event_loop_terminal_events_error() {
-        let error_message: String = String::from("error");
-        let error = Error::new(ErrorKind::Other, error_message.clone());
+        let error = Error::new(ErrorKind::Other, String::from("error"));
         let mut handler = setup(vec![Err(error)]);
 
         sleep(Duration::from_secs(1)).await;
@@ -204,7 +208,7 @@ mod event_loop_tests {
 
         assert_eq!(
             response,
-            Some(Event::Error(error_message)),
+            Some(Event::Error(ERROR_MESSAGE.to_string())),
             "Received unexpected event: {response:?}"
         );
     }
@@ -248,8 +252,9 @@ mod event_loop_tests {
                     received_quit_event = true;
                     break;
                 }
-                Ok(_) => break,
+                Err(TryRecvError::Empty) => {}
                 Err(_) => break,
+                _ => {}
             }
         }
         handler.cancel();

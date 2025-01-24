@@ -1,8 +1,8 @@
 use ratatui::{
+    buffer::Buffer,
     layout::{Alignment, Rect},
     text::Text,
-    widgets::{Block, BorderType, Borders, Padding, Paragraph},
-    Frame,
+    widgets::{Block, BorderType, Borders, Padding, Paragraph, Widget},
 };
 
 use crate::workspace_store::{WorkspaceAction, WorkspaceStore};
@@ -13,15 +13,6 @@ pub struct WorkspaceTabWidget {
 }
 
 impl WorkspaceTabWidget {
-    pub fn draw(&mut self, frame: &mut Frame, area: Rect) {
-        let block = self.create_tab();
-
-        let workspace_name = Text::from(self.store.get_workspace_name());
-        let paragraph = Paragraph::new(workspace_name).left_aligned().block(block);
-
-        frame.render_widget(paragraph, area);
-    }
-
     pub fn init(&mut self) -> color_eyre::eyre::Result<()> {
         self.store.update(WorkspaceAction::SetWorkspaceName);
 
@@ -38,10 +29,26 @@ impl WorkspaceTabWidget {
     }
 }
 
+impl Widget for WorkspaceTabWidget {
+    fn render(self, area: Rect, buf: &mut Buffer)
+    where
+        Self: Sized,
+    {
+        let block = self.create_tab();
+        let workspace_name = Text::from(self.store.get_workspace_name());
+
+        Paragraph::new(workspace_name)
+            .left_aligned()
+            .block(block)
+            .render(area, buf);
+    }
+}
+
 #[cfg(test)]
 mod workspace_tab_widget_tests {
     use super::WorkspaceTabWidget;
 
+    use insta::assert_snapshot;
     use test_utils::WidgetTestBed;
 
     use crate::test_bed::WorkspaceTestBed;
@@ -62,8 +69,10 @@ mod workspace_tab_widget_tests {
         test_bed
             .widget
             .terminal
-            .draw(|f| test_bed.widget.widget.draw(f, f.area()))
+            .draw(|f| f.render_widget(test_bed.widget.widget, f.area()))
             .unwrap();
+
+        assert_snapshot!(test_bed.widget.terminal.backend());
 
         test_bed.workspace.restore();
     }

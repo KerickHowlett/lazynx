@@ -1,7 +1,8 @@
 use ratatui::{
+    buffer::Buffer,
     layout::Rect,
     prelude::{Constraint, Direction, Layout},
-    Frame,
+    widgets::Widget,
 };
 
 use color_eyre::eyre::Result;
@@ -10,30 +11,34 @@ use workspace::WorkspaceViewWidget;
 use crate::sidebar_widget::SidebarWidget;
 
 pub trait IAppWidget {
-    fn draw(&mut self, frame: &mut Frame, area: Rect);
     fn init(&mut self) -> Result<()>;
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct AppWidget {
     sidebar: SidebarWidget,
     workspace: WorkspaceViewWidget,
 }
 
 impl IAppWidget for AppWidget {
-    fn draw(&mut self, frame: &mut Frame, _area: Rect) {
-        let chunks = Layout::default()
-            .direction(Direction::Horizontal)
-            .constraints(vec![Constraint::Min(38), Constraint::Percentage(75)])
-            .split(frame.area());
-
-        self.sidebar.draw(frame, chunks[0]);
-        self.workspace.draw(frame, chunks[1]);
-    }
-
     fn init(&mut self) -> color_eyre::eyre::Result<()> {
         self.sidebar.init()?;
         Ok(())
+    }
+}
+
+impl Widget for AppWidget {
+    fn render(self, area: Rect, buf: &mut Buffer)
+    where
+        Self: Sized,
+    {
+        let chunks = Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints(vec![Constraint::Min(38), Constraint::Percentage(75)])
+            .split(area);
+
+        self.sidebar.render(chunks[0], buf);
+        self.workspace.render(chunks[1], buf);
     }
 }
 
@@ -41,6 +46,7 @@ impl IAppWidget for AppWidget {
 mod app_widget_tests {
     use super::{AppWidget, IAppWidget};
 
+    use color_eyre::eyre::Result;
     use insta::assert_snapshot;
 
     use test_utils::WidgetTestBed;
@@ -55,13 +61,13 @@ mod app_widget_tests {
         fn default() -> Self {
             return TestBed {
                 workspace: WorkspaceTestBed::default(),
-                widget: WidgetTestBed::<AppWidget>::new(30, 50),
+                widget: WidgetTestBed::<AppWidget>::new(100, 50),
             };
         }
     }
 
     #[test]
-    fn test_sidebar_widget_draw() {
+    fn test_app_widget_render() -> Result<()> {
         let mut test_bed = TestBed::default();
         test_bed.workspace.setup();
 
@@ -69,11 +75,13 @@ mod app_widget_tests {
         test_bed
             .widget
             .terminal
-            .draw(|f| test_bed.widget.widget.draw(f, f.area()))
+            .draw(|f| f.render_widget(test_bed.widget.widget, f.area()))
             .unwrap();
 
         assert_snapshot!(test_bed.widget.terminal.backend());
 
         test_bed.workspace.restore();
+
+        Ok(())
     }
 }

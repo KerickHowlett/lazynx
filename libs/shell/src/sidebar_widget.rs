@@ -1,21 +1,19 @@
 use std::rc::Rc;
 
-use ratatui::prelude::{Constraint, Direction, Frame, Layout, Rect};
+use ratatui::{
+    buffer::Buffer,
+    prelude::{Constraint, Direction, Layout, Rect},
+    widgets::Widget,
+};
 
 use workspace::WorkspaceTabWidget;
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct SidebarWidget {
     workspace_tab: WorkspaceTabWidget,
 }
 
 impl SidebarWidget {
-    pub fn draw(&mut self, frame: &mut Frame, area: Rect) {
-        let chunks = self.create_layout(area);
-
-        self.workspace_tab.draw(frame, chunks[0]);
-    }
-
     pub fn init(&mut self) -> color_eyre::eyre::Result<()> {
         self.workspace_tab.init()?;
         Ok(())
@@ -29,14 +27,24 @@ impl SidebarWidget {
     }
 }
 
+impl Widget for SidebarWidget {
+    fn render(self, area: Rect, buf: &mut Buffer)
+    where
+        Self: Sized,
+    {
+        let chunks = self.create_layout(area);
+        self.workspace_tab.render(chunks[0], buf);
+    }
+}
+
 #[cfg(test)]
 mod sidebar_widget_tests {
     use super::SidebarWidget;
 
+    use color_eyre::eyre::Result;
     use insta::assert_snapshot;
 
     use test_utils::WidgetTestBed;
-
     use workspace::test_bed::WorkspaceTestBed;
 
     struct TestBed {
@@ -54,7 +62,7 @@ mod sidebar_widget_tests {
     }
 
     #[test]
-    fn test_sidebar_widget_draw() {
+    fn test_sidebar_widget_render() -> Result<()> {
         let mut test_bed = TestBed::default();
         test_bed.workspace.setup();
 
@@ -62,11 +70,13 @@ mod sidebar_widget_tests {
         test_bed
             .widget
             .terminal
-            .draw(|f| test_bed.widget.widget.draw(f, f.area()))
+            .draw(|f| f.render_widget(test_bed.widget.widget, f.area()))
             .unwrap();
 
         assert_snapshot!(test_bed.widget.terminal.backend());
 
         test_bed.workspace.restore();
+
+        Ok(())
     }
 }
