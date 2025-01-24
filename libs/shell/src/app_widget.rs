@@ -42,3 +42,28 @@ impl IAppWidget for AppWidget {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod app_widget_tests {
+    use super::{AppWidget, IAppWidget};
+
+    use insta::assert_snapshot;
+
+    use test_utils::WidgetTestBed;
+
+    #[test]
+    fn test_app_widget_draw() {
+        let mut test_bed = WidgetTestBed::<AppWidget>::new(100, 100);
+        test_bed.setup();
+
+        test_bed.widget.init().unwrap();
+        test_bed
+            .terminal
+            .draw(|f| test_bed.widget.draw(f, f.area()))
+            .unwrap();
+
+        assert_snapshot!(test_bed.terminal.backend());
+
+        test_bed.restore();
+    }
+}
