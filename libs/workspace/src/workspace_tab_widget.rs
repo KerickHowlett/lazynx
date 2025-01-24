@@ -1,6 +1,13 @@
 use std::env;
 
-use ratatui::{prelude::*, widgets::*};
+use ratatui::{
+    layout::{Alignment, Rect},
+    text::Text,
+    widgets::{Block, BorderType, Borders, Padding, Paragraph},
+    Frame,
+};
+
+// use ratatui::{prelude::*, widgets::*};
 
 #[derive(Default)]
 pub struct WorkspaceTabWidget {
