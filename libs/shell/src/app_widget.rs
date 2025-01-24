@@ -20,12 +20,6 @@ pub struct AppWidget {
     workspace: WorkspaceViewWidget,
 }
 
-impl AppWidget {
-    pub fn new() -> Self {
-        return Self::default();
-    }
-}
-
 impl IAppWidget for AppWidget {
     fn draw(&mut self, frame: &mut Frame, _area: Rect) {
         let chunks = Layout::default()
