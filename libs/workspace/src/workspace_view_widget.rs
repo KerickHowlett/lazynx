@@ -71,17 +71,17 @@ mod workspace_widget_tests {
     use super::WorkspaceViewWidget;
 
     use insta::assert_snapshot;
-    use ratatui::{backend::TestBackend, Terminal};
+    use test_utils::WidgetTestBed;
 
     #[test]
     fn test_workspace_view_widget() {
-        let mut widget = WorkspaceViewWidget::default();
+        let mut test_bed = WidgetTestBed::<WorkspaceViewWidget>::new(62, 50);
 
-        let backend = TestBackend::new(62, 50);
-        let mut terminal = Terminal::new(backend).unwrap();
+        test_bed
+            .terminal
+            .draw(|f| test_bed.widget.draw(f, f.area()))
+            .unwrap();
 
-        terminal.draw(|f| widget.draw(f, f.area())).unwrap();
-
-        assert_snapshot!(terminal.backend());
+        assert_snapshot!(test_bed.terminal.backend());
     }
 }
