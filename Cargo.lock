@@ -1599,7 +1599,9 @@ dependencies = [
  "app_config",
  "color-eyre",
  "crossterm",
+ "insta",
  "ratatui",
+ "test_utils",
  "workspace",
 ]
 
@@ -1776,6 +1778,13 @@ dependencies = [
  "quote",
  "syn 2.0.87",
  "test-case-core",
+]
+
+[[package]]
+name = "test_utils"
+version = "0.1.0"
+dependencies = [
+ "ratatui",
 ]
 
 [[package]]
@@ -2397,13 +2406,13 @@ dependencies = [
 name = "workspace"
 version = "0.1.0"
 dependencies = [
- "app_config",
  "chrono",
  "color-eyre",
  "crossterm",
  "insta",
  "pretty_assertions",
  "ratatui",
+ "test_utils",
 ]
 
 [[package]]

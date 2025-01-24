@@ -28,3 +28,28 @@ impl SidebarWidget {
             .split(area);
     }
 }
+
+#[cfg(test)]
+mod sidebar_widget_tests {
+    use super::SidebarWidget;
+
+    use insta::assert_snapshot;
+
+    use test_utils::WidgetTestBed;
+
+    #[test]
+    fn test_sidebar_widget_draw() {
+        let mut test_bed = WidgetTestBed::<SidebarWidget>::new(30, 50);
+        test_bed.setup();
+
+        test_bed.widget.init().unwrap();
+        test_bed
+            .terminal
+            .draw(|f| test_bed.widget.draw(f, f.area()))
+            .unwrap();
+
+        assert_snapshot!(test_bed.terminal.backend());
+
+        test_bed.restore();
+    }
+}
