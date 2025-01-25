@@ -26,4 +26,9 @@ impl<TWidget: Default> WidgetTestBed<TWidget> {
             widget: TWidget::default(),
         };
     }
+
+    pub fn with_widget(mut self, widget: TWidget) -> Self {
+        self.widget = widget;
+        return self;
+    }
 }
