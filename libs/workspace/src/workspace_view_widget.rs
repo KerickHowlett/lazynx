@@ -25,6 +25,8 @@ impl WorkspaceViewWidget {
             .split(area);
     }
 
+    // TODO: Remember to make the snapshot unit test deterministic when it comes
+    //-      to the copyright year.
     fn get_copyright(&self) -> Paragraph {
         let current_year = chrono::Datelike::year(&chrono::Local::now());
         let copyright = Span::from(format!(
