@@ -12,7 +12,7 @@ pub struct WorkspaceViewWidget;
 impl WorkspaceViewWidget {
     fn create_block(&self) -> Block {
         return Block::default()
-            .title(Line::from("Workspace").left_aligned())
+            .title(Line::from("─Workspace").left_aligned())
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded)
             .padding(Padding::horizontal(2));

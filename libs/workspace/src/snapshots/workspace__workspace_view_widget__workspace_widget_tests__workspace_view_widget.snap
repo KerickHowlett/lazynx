@@ -1,8 +1,8 @@
 ---
 source: libs/workspace/src/workspace_view_widget.rs
-expression: terminal.backend()
+expression: test_bed.terminal.backend()
 ---
-"╭Workspace───────────────────────────────────────────────────╮"
+"╭─Workspace──────────────────────────────────────────────────╮"
 "│                                                            │"
 "│   _                     _   _                              │"
 "│  | |                   | \ | |                             │"
