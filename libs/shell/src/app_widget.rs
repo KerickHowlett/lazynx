@@ -49,8 +49,8 @@ mod app_widget_tests {
     use color_eyre::eyre::Result;
     use insta::assert_snapshot;
 
-    use test_utils::WidgetTestBed;
-    use workspace::test_bed::WorkspaceTestBed;
+    use test_utils::{mocks::MOCK_DATE, WidgetTestBed};
+    use workspace::{test_bed::WorkspaceTestBed, WorkspaceViewWidget};
 
     struct TestBed {
         widget: WidgetTestBed<AppWidget>,
@@ -59,9 +59,13 @@ mod app_widget_tests {
 
     impl Default for TestBed {
         fn default() -> Self {
+            let mut widget = AppWidget::default();
+            widget.workspace = WorkspaceViewWidget::new(*MOCK_DATE);
+            let widget_testbed = WidgetTestBed::<AppWidget>::new(100, 50).with_widget(widget);
+
             return TestBed {
                 workspace: WorkspaceTestBed::default(),
-                widget: WidgetTestBed::<AppWidget>::new(100, 50),
+                widget: widget_testbed,
             };
         }
     }

@@ -1,15 +1,28 @@
 use std::rc::Rc;
 
+use chrono::{DateTime, Datelike, Local};
 use ratatui::{
     buffer::Buffer,
     prelude::{Constraint, Direction, Layout, Line, Rect, Span},
     widgets::{Block, BorderType, Borders, Padding, Paragraph, Widget},
 };
 
-#[derive(Default, Clone)]
-pub struct WorkspaceViewWidget;
+#[derive(Clone)]
+pub struct WorkspaceViewWidget {
+    date: DateTime<Local>,
+}
+
+impl Default for WorkspaceViewWidget {
+    fn default() -> Self {
+        return WorkspaceViewWidget::new(Local::now());
+    }
+}
 
 impl WorkspaceViewWidget {
+    pub fn new(date: DateTime<Local>) -> Self {
+        return WorkspaceViewWidget { date };
+    }
+
     fn create_block(&self) -> Block {
         return Block::default()
             .title(Line::from("─Workspace").left_aligned())
@@ -27,13 +40,14 @@ impl WorkspaceViewWidget {
 
     // TODO: Remember to make the snapshot unit test deterministic when it comes
     //-      to the copyright year.
-    fn get_copyright(&self) -> Paragraph {
-        let current_year = chrono::Datelike::year(&chrono::Local::now());
+    fn get_copyright_paragraph(&self) -> Paragraph {
+        let copyright_year = Datelike::year(&self.date);
+        let copyright_icon = String::from('\u{00A9}');
         let copyright = Span::from(format!(
             "Copyright {} {} Kerick Howlett",
-            String::from('\u{00A9}'),
-            current_year
+            copyright_icon, copyright_year
         ));
+
         return Paragraph::new(copyright);
     }
 
@@ -66,7 +80,7 @@ impl Widget for WorkspaceViewWidget {
         let header = self.get_header();
         header.render(chunks[0], buf);
 
-        let copyright = self.get_copyright();
+        let copyright = self.get_copyright_paragraph();
         copyright.render(chunks[1], buf);
     }
 }
@@ -76,11 +90,12 @@ mod workspace_widget_tests {
     use super::WorkspaceViewWidget;
 
     use insta::assert_snapshot;
-    use test_utils::WidgetTestBed;
+    use test_utils::{mocks::MOCK_DATE, WidgetTestBed};
 
     #[test]
     fn test_workspace_view_widget() {
-        let mut test_bed = WidgetTestBed::<WorkspaceViewWidget>::new(62, 50);
+        let widget = WorkspaceViewWidget::new(*MOCK_DATE);
+        let mut test_bed = WidgetTestBed::<WorkspaceViewWidget>::new(62, 50).with_widget(widget);
 
         test_bed
             .terminal
