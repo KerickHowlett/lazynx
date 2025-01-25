@@ -24,7 +24,7 @@ impl WorkspaceStore {
             .file_name()
             .and_then(|name| name.to_str())
             .map(|s| s.to_owned())
-            .unwrap_or_else(|| String::from("Unknown Workspace"));
+            .unwrap();
     }
 
     pub fn get_workspace_name(&self) -> String {
