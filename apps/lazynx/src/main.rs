@@ -1,4 +1,6 @@
 mod app;
+mod app_status;
+mod consts;
 
 use color_eyre::Result;
 

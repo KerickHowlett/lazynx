@@ -1,23 +1,21 @@
-use std::result;
-
 use color_eyre::eyre::Result;
-use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyModifiers};
+use crossterm::event::Event as CrosstermEvent;
 use ratatui::widgets::Widget;
 use shell::IAppWidget;
-use tokio::sync::mpsc::error::TryRecvError;
 
 use app_config::Config;
 use events::{Event, EventLoopHandler};
 use tui::Tui;
 
-// Key events to quit TUI app.
-const QUIT_KEY_C: KeyEvent = KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTROL);
-const QUIT_KEY_D: KeyEvent = KeyEvent::new(KeyCode::Char('d'), KeyModifiers::CONTROL);
+use crate::{
+    app_status::AppStatus,
+    consts::{QUIT_KEY_CTRL_C, QUIT_KEY_CTRL_D},
+};
 
 #[derive(Default)]
 pub struct App<TShell: Widget + IAppWidget + Clone> {
     shell: TShell,
-    should_quit: bool,
+    status: AppStatus,
 }
 
 impl<TShell: Widget + IAppWidget + Clone> App<TShell> {
@@ -29,12 +27,9 @@ impl<TShell: Widget + IAppWidget + Clone> App<TShell> {
     ) -> Result<()> {
         self.shell.init()?;
 
-        loop {
-            let event = event_loop.next();
-            self.event_handler(event, &mut tui)?;
-
-            if self.should_quit {
-                break;
+        while self.status == AppStatus::Running {
+            if let Ok(event) = event_loop.next() {
+                self.event_handler(event, &mut tui)?;
             }
         }
 
@@ -49,35 +44,34 @@ impl<TShell: Widget + IAppWidget + Clone> App<TShell> {
         Ok(())
     }
 
-    fn event_handler(
-        &mut self,
-        event: result::Result<Event, TryRecvError>,
-        tui: &mut Tui,
-    ) -> Result<()> {
+    fn event_handler(&mut self, event: Event, tui: &mut Tui) -> Result<()> {
         match event {
-            Ok(Event::Render) => self.draw(tui)?,
-            Ok(Event::Quit) => self.should_quit = true,
-            Ok(Event::Crossterm(CrosstermEvent::Key(key))) => {
-                if key == QUIT_KEY_C || key == QUIT_KEY_D {
-                    self.should_quit = true;
+            Event::Render => self.draw(tui)?,
+            Event::Quit => self.quit(),
+            Event::Crossterm(CrosstermEvent::Key(key)) => {
+                if key == QUIT_KEY_CTRL_C || key == QUIT_KEY_CTRL_D {
+                    self.quit();
                 }
             }
-            Err(TryRecvError::Empty) => {}
-            Err(_) => self.should_quit = true,
             _ => {}
         }
 
         Ok(())
     }
+
+    fn quit(&mut self) {
+        self.status = AppStatus::Quit;
+    }
 }
 
 #[cfg(test)]
 mod app_tests {
-    use crate::app::QUIT_KEY_D;
+    use super::App;
 
-    use super::{App, QUIT_KEY_C};
-
-    use std::result;
+    use crate::{
+        app_status::AppStatus,
+        consts::{QUIT_KEY_CTRL_C, QUIT_KEY_CTRL_D},
+    };
 
     use app_config::Config;
     use color_eyre::eyre::Result;
@@ -85,11 +79,12 @@ mod app_tests {
     use pretty_assertions::assert_eq;
     use ratatui::{buffer::Buffer, layout::Rect, widgets::Widget};
     use test_case::test_case;
-    use tokio::sync::mpsc::error::TryRecvError;
 
     use events::{Event, EventLoopHandler};
     use shell::IAppWidget;
     use tui::{Tui, TuiRunner};
+
+    const OTHER_KEY: KeyEvent = KeyEvent::new(KeyCode::Char('a'), KeyModifiers::empty());
 
     #[derive(Default, Clone)]
     struct TestShell {
@@ -109,7 +104,7 @@ mod app_tests {
 
     fn setup() -> Result<(App<TestShell>, Tui, EventLoopHandler)> {
         let mut app = App::<TestShell>::default();
-        app.should_quit = false;
+        app.status = AppStatus::Running;
         app.shell.ran_init = false;
 
         let mut tui = TuiRunner::default();
@@ -122,23 +117,20 @@ mod app_tests {
         return Ok((app, backend, event_loop));
     }
 
-    const OTHER_KEY: KeyEvent = KeyEvent::new(KeyCode::Char('a'), KeyModifiers::empty());
-
-    #[test_case(Err(TryRecvError::Disconnected), true, "App should have terminated."; "Disconnected")]
-    #[test_case(Ok(Event::Crossterm(CrosstermEvent::Key(QUIT_KEY_C))), true, "App should have terminated."; "Ctrl + C")]
-    #[test_case(Ok(Event::Crossterm(CrosstermEvent::Key(QUIT_KEY_D))), true, "App should have terminated."; "Ctrl + D")]
-    #[test_case(Ok(Event::Crossterm(CrosstermEvent::Key(OTHER_KEY))), false, "App should not have terminated."; "Any Other Key Should Not Quit")]
+    #[test_case(Event::Crossterm(CrosstermEvent::Key(QUIT_KEY_CTRL_C)), AppStatus::Quit, "App should have terminated."; "Ctrl + C")]
+    #[test_case(Event::Crossterm(CrosstermEvent::Key(QUIT_KEY_CTRL_D)), AppStatus::Quit, "App should have terminated."; "Ctrl + D")]
+    #[test_case(Event::Crossterm(CrosstermEvent::Key(OTHER_KEY)), AppStatus::Running, "App should not have terminated."; "Any Other Key Should Not Quit")]
     #[tokio::test]
     async fn test_should_quit_events(
-        event: result::Result<Event, TryRecvError>,
-        expected: bool,
+        event: Event,
+        expected: AppStatus,
         failure_message: &str,
     ) -> Result<()> {
         let (mut app, mut backend, _) = setup()?;
 
         app.event_handler(event, &mut backend)?;
 
-        assert_eq!(app.should_quit, expected, "{}", failure_message);
+        assert_eq!(app.status, expected, "{}", failure_message);
 
         Ok(())
     }
@@ -162,7 +154,7 @@ mod app_tests {
     #[tokio::test]
     async fn test_run_shell_init() -> Result<()> {
         let (mut app, backend, event_loop) = setup()?;
-        app.should_quit = true;
+        app.status = AppStatus::Quit;
 
         app.run(backend, Config::default(), event_loop)?;
 
