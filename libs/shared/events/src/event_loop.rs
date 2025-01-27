@@ -38,6 +38,10 @@ impl<TEvents: Stream<Item = Result<CrosstermEvent, Error>> + Send + 'static> Eve
     }
 
     fn terminal_event_handler(&self, event: Result<CrosstermEvent, Error>) {
+        if matches!(event, Ok(CrosstermEvent::Resize(_, _))) {
+            println!("RESIZE");
+        }
+
         let event = match event {
             Ok(CrosstermEvent::Key(key)) if key.kind == KeyEventKind::Release => None,
             Ok(event) => Some(Event::Crossterm(event)),

@@ -46,7 +46,7 @@ impl<TShell: Widget + IAppWidget + Clone> App<TShell> {
 
     fn event_handler(&mut self, event: Event, tui: &mut Tui) -> Result<()> {
         match event {
-            Event::Render => self.draw(tui)?,
+            Event::Render | Event::Crossterm(CrosstermEvent::Resize(_, _)) => self.draw(tui)?,
             Event::Quit => self.quit(),
             Event::Crossterm(CrosstermEvent::Key(key)) => {
                 if key == QUIT_KEY_CTRL_C || key == QUIT_KEY_CTRL_D {
