@@ -7,15 +7,12 @@ authors = ["Kerick Howlett <8661181+KerickHowlett@users.noreply.github.com>"]
 
 [dependencies]
 # Local Dependencies
-actions = { path = '../../libs/shared/actions' }
-app_config = { path = "../../libs/shared/config" }
-errors = { path = "../../libs/shared/errors" }
-events = { path = "../../libs/shared/events" }
-logger = { path = "../../libs/shared/logger" }
-shell = { path = "../../libs/shell" }
-tui = { path = "../../libs/shared/tui" }
+test_utils = { path = "../../libs/test_utils" }
 
 # Third-Party Dependencies
+better-panic = "0.3.0"
+cfg-if = "1.0.0"
+chrono = "0.4.38"
 clap = { version = "4.5.20", features = [
     "derive",
     "cargo",
@@ -25,13 +22,35 @@ clap = { version = "4.5.20", features = [
     "unstable-styles",
 ] }
 color-eyre = "0.6.3"
+config = "0.14.0"
 crossterm = { version = "0.28.1", features = ["serde", "event-stream"] }
+derive_deref = "1.1.1"
+directories = "5.0.1"
+futures = "0.3.31"
+human-panic = "2.0.2"
+json5 = "0.4.1"
+libc = "0.2.161"
 log = "0.4.22"
 ratatui = { version = "0.29.0", features = ["serde", "macros"] }
+serde = { version = "1.0.211", features = ["derive"] }
+serde_derive = "1.0.215"
+serde_json = "1.0.132"
+serde_with = "3.12.0"
+signal-hook = "0.3.17"
+strip-ansi-escapes = "0.2.0"
+strum = { version = "0.26.3", features = ["derive"] }
+test-case = "3.3.1"
 tokio = { version = "1.42.0", features = ["full"] }
 tokio-util = "0.7.13"
+tokio-stream = "0.1.17"
+tracing = "0.1.40"
+tracing-appender = "0.2.3"
+tracing-error = "0.2.0"
+tracing-log = "0.2.0"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter", "serde"] }
 
 [dev-dependencies]
+insta = "1.42.0"
 pretty_assertions = "1.4.1"
 test-case = "3.3.1"
 tokio = { version = "1.42.0", features = ["test-util"] }

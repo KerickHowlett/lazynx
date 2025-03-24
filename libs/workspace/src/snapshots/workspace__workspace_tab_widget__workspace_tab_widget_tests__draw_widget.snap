@@ -1,7 +1,0 @@
----
-source: libs/workspace/src/workspace_tab_widget.rs
-expression: terminal.backend()
----
-"╭─[1]─Workspace──────────────╮"
-"│   test                     │"
-"╰────────────────────────────╯"

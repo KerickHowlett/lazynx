@@ -2,14 +2,21 @@ mod app;
 mod app_status;
 mod consts;
 
+#[path = "./shared/shared.mod.rs"]
+mod shared;
+
+#[path = "./shell/shell.mod.rs"]
+mod shell;
+
+#[path = "./workspace/workspace.mod.rs"]
+mod workspace;
+
 use color_eyre::Result;
 
 use app::App;
-use app_config::Config;
 use crossterm::event::EventStream;
-use events::EventLoopHandler;
+use shared::{config::Config, errors, events::EventLoopHandler, logger, tui::TuiRunner};
 use shell::AppWidget;
-use tui::TuiRunner;
 
 #[tokio::main]
 async fn main() -> Result<()> {

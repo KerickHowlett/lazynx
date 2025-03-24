@@ -1,41 +1,41 @@
 {
-    "name": "@lazynx/source",
-    "version": "0.0.0",
-    "license": "MIT",
-    "scripts": {
-        "affected": "nx affected",
-        "affected:graph": "nx affected --graph",
-        "affected:lint": "nx affected:lint --fix",
-        "affected:test": "nx affected:test",
-        "build": "nx run lazynx:build",
-        "commit": "git-cz",
-        "graph": "nx graph",
-        "lint": "nx lint --fix",
-        "list": "nx list",
-        "nx": "nx",
-        "prepare": "husky",
-        "start": "nx run lazynx:run",
-        "test": "nx test",
-        "test:watch": "nx test --watch"
-    },
-    "config": {
-        "commitizen": {
-            "path": "@commitlint/cz-commitlint"
-        }
-    },
-    "private": true,
-    "dependencies": {
-        "@monodon/rust": "2.1.0"
-    },
-    "devDependencies": {
-        "@commitlint/cli": "^19.5.0",
-        "@commitlint/config-conventional": "^19.5.0",
-        "@commitlint/cz-commitlint": "^19.5.0",
-        "@nx/workspace": "20.0.8",
-        "commitizen": "^4.3.1",
-        "cspell": "^8.15.7",
-        "husky": "^9.1.6",
-        "inquirer": "9",
-        "nx": "20.0.8"
+  "name": "@lazynx/source",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "affected": "nx affected",
+    "affected:graph": "nx affected --graph",
+    "affected:lint": "nx affected:lint --fix",
+    "affected:test": "nx affected:test",
+    "build": "nx run lazynx:build",
+    "commit": "git-cz",
+    "graph": "nx graph",
+    "lint": "nx lint --fix",
+    "list": "nx list",
+    "nx": "nx",
+    "prepare": "husky",
+    "start": "nx run lazynx:run",
+    "test": "nx test",
+    "test:watch": "nx test --watch"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
     }
+  },
+  "private": true,
+  "dependencies": {
+    "@monodon/rust": "2.1.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@commitlint/cz-commitlint": "^19.5.0",
+    "@nx/workspace": "20.6.2",
+    "commitizen": "^4.3.1",
+    "cspell": "^8.15.7",
+    "husky": "^9.1.6",
+    "inquirer": "9",
+    "nx": "20.6.2"
+  }
 }

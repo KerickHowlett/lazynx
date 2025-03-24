@@ -3,14 +3,6 @@
 version = 4
 
 [[package]]
-name = "actions"
-version = "0.1.0"
-dependencies = [
- "serde",
- "strum",
-]
-
-[[package]]
 name = "addr2line"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -114,26 +106,6 @@ checksum = "2109dbce0e72be3ec00bed26e6a7479ca384ad226efdd66db8fa2e3a38c83125"
 dependencies = [
  "anstyle",
  "windows-sys 0.59.0",
-]
-
-[[package]]
-name = "app_config"
-version = "0.1.0"
-dependencies = [
- "color-eyre",
- "config",
- "crossterm",
- "derive_deref",
- "directories",
- "json5",
- "pretty_assertions",
- "ratatui",
- "serde",
- "serde_json",
- "serde_with",
- "tracing",
- "tracing-error",
- "tracing-subscriber",
 ]
 
 [[package]]
@@ -635,37 +607,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "errors"
-version = "0.1.0"
-dependencies = [
- "better-panic",
- "cfg-if",
- "color-eyre",
- "human-panic",
- "tracing",
- "tracing-error",
- "tracing-subscriber",
- "tui",
-]
-
-[[package]]
-name = "events"
-version = "0.1.0"
-dependencies = [
- "color-eyre",
- "crossterm",
- "futures",
- "pretty_assertions",
- "serde",
- "serde_derive",
- "serde_json",
- "test-case",
- "tokio",
- "tokio-stream",
- "tokio-util",
-]
-
-[[package]]
 name = "eyre"
 version = "0.6.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1013,23 +954,40 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 name = "lazynx"
 version = "0.1.0"
 dependencies = [
- "actions",
- "app_config",
+ "better-panic",
+ "cfg-if",
+ "chrono",
  "clap",
  "color-eyre",
+ "config",
  "crossterm",
- "errors",
- "events",
+ "derive_deref",
+ "directories",
+ "futures",
+ "human-panic",
+ "insta",
+ "json5",
+ "libc",
  "log",
- "logger",
  "pretty_assertions",
  "ratatui",
- "shell",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "serde_with",
+ "signal-hook",
+ "strip-ansi-escapes",
+ "strum",
  "test-case",
+ "test_utils",
  "tokio",
  "tokio-stream",
  "tokio-util",
- "tui",
+ "tracing",
+ "tracing-appender",
+ "tracing-error",
+ "tracing-log",
+ "tracing-subscriber",
 ]
 
 [[package]]
@@ -1075,18 +1033,6 @@ name = "log"
 version = "0.4.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
-
-[[package]]
-name = "logger"
-version = "0.1.0"
-dependencies = [
- "color-eyre",
- "tracing",
- "tracing-appender",
- "tracing-error",
- "tracing-log",
- "tracing-subscriber",
-]
 
 [[package]]
 name = "lru"
@@ -1592,20 +1538,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "shell"
-version = "0.1.0"
-dependencies = [
- "actions",
- "app_config",
- "color-eyre",
- "crossterm",
- "insta",
- "ratatui",
- "test_utils",
- "workspace",
-]
-
-[[package]]
 name = "shlex"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2030,31 +1962,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tui"
-version = "0.1.0"
-dependencies = [
- "color-eyre",
- "crossterm",
- "futures",
- "libc",
- "log",
- "pretty_assertions",
- "ratatui",
- "serde",
- "serde_derive",
- "serde_json",
- "signal-hook",
- "strip-ansi-escapes",
- "strum",
- "test-case",
- "tokio",
- "tokio-util",
- "tracing",
- "tracing-error",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "typenum"
 version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2401,19 +2308,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "36c1fec1a2bb5866f07c25f68c26e565c4c200aebb96d7e55710c19d3e8ac49b"
 dependencies = [
  "memchr",
-]
-
-[[package]]
-name = "workspace"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "color-eyre",
- "crossterm",
- "insta",
- "pretty_assertions",
- "ratatui",
- "test_utils",
 ]
 
 [[package]]

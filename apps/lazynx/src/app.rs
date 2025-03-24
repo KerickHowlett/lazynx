@@ -1,15 +1,16 @@
 use color_eyre::eyre::Result;
 use crossterm::event::Event as CrosstermEvent;
 use ratatui::widgets::Widget;
-use shell::IAppWidget;
-
-use app_config::Config;
-use events::{Event, EventLoopHandler};
-use tui::Tui;
 
 use crate::{
     app_status::AppStatus,
     consts::{QUIT_KEY_CTRL_C, QUIT_KEY_CTRL_D},
+    shared::{
+        config::Config,
+        events::{Event, EventLoopHandler},
+        tui::Tui,
+    },
+    shell::IAppWidget,
 };
 
 #[derive(Default)]
@@ -71,18 +72,19 @@ mod app_tests {
     use crate::{
         app_status::AppStatus,
         consts::{QUIT_KEY_CTRL_C, QUIT_KEY_CTRL_D},
+        shared::{
+            config::Config,
+            events::{Event, EventLoopHandler},
+            tui::{Tui, TuiRunner},
+        },
+        shell::IAppWidget,
     };
 
-    use app_config::Config;
     use color_eyre::eyre::Result;
     use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyModifiers};
     use pretty_assertions::assert_eq;
     use ratatui::{buffer::Buffer, layout::Rect, widgets::Widget};
     use test_case::test_case;
-
-    use events::{Event, EventLoopHandler};
-    use shell::IAppWidget;
-    use tui::{Tui, TuiRunner};
 
     const OTHER_KEY: KeyEvent = KeyEvent::new(KeyCode::Char('a'), KeyModifiers::empty());
 
